@@ -8,6 +8,7 @@ import '../../storage/storage_key.dart';
 import '../../storage/storage_service.dart';
 
 class AuthRepository {
+
   Future<bool> login({
     required String email,
     required String password,

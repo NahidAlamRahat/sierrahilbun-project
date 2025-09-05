@@ -1,5 +1,6 @@
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:sierrahilbun/my_document_screen/my_document_screen.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/sign_in_screen.dart';
 import 'package:sierrahilbun/screens/terms_condition_screen/terms_condition_screen.dart';
 import '../screens/auth/create_pass_verify_otp_screen/create_pass_verify_otp_screen.dart';
@@ -10,6 +11,7 @@ import '../screens/auth/forgot_verify_otp_screen/forgot_pass_verify_otp_screen.d
 import '../screens/auth/location_screen/location_screen.dart';
 import '../screens/auth/sign_up_screen/sign_up_screen.dart';
 import '../screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
+import '../screens/home_screen/controller/home_controller.dart';
 import '../screens/home_screen/home_screen.dart';
 import '../screens/profile_section/chnage_pass_screen/change_pass_screen.dart';
 import '../screens/profile_section/chnage_profile_info/chnage_profile_screen.dart';
@@ -85,7 +87,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.homeScreen,
         page: () => HomeScreen(),
-        // binding: GeneralBindings(),
+        // binding: HomeController(),
       ),
 
       GetPage(
@@ -117,6 +119,14 @@ class RouteManager {
         page: () => SwipeableBottomNavigation(),
         // binding: GeneralBindings(),
       ),
+
+      GetPage(
+        name: AppRoutes.myDocumentScreen,
+        page: () => MyDocumentScreen(),
+        // binding: GeneralBindings(),
+      ),
+
+
     ];
   }
 }

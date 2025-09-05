@@ -3,6 +3,7 @@ class AppRoutes {
 
   // General Screens
   static const splashScreen = '/splashScreen';
+
   static const signInScreen = '/signInScreen';
   static const termsAndConditionScreen = '/termsAndConditionScreen';
   static const forgotPasswordScreen = '/forgotPasswordScreen';
@@ -17,5 +18,6 @@ class AppRoutes {
   static const changePassScreen = '/ChangePassScreen';
   static const uploadDocumentScreen = '/uploadDocumentScreen';
   static const swipeableBottomNavigation = '/swipeableBottomNavigation';
+  static const myDocumentScreen = '/myDocumentScreen';
 
 }

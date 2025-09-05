@@ -5,7 +5,7 @@ import '../../../constants/api_urls.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../api/api_services.dart';
 
-class SignUpApiController extends GetxController {
+class SignUpApiRepository extends GetxController {
   bool _signUpInProgress = false;
 
   bool get signUpInProgress => _signUpInProgress;

@@ -7,7 +7,7 @@ import '../../api/api_services.dart';
 import '../../storage/storage_key.dart';
 import '../../storage/storage_service.dart';
 
-class SignInApiController extends GetxController {
+class SignInRepository extends GetxController {
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 
@@ -80,8 +80,6 @@ class SignInApiController extends GetxController {
 
 
 // 🔹 Controller Method
-*/
-/*
   Future<int> signInApiCall({required signInModel, String? email}) async {
     _inProgress = true;
     _errorMessage = null;
@@ -126,7 +124,7 @@ class SignInApiController extends GetxController {
       return response.statusCode ?? 500;
     }
   }
-*//*
+
 
 
 

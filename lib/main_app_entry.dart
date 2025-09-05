@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:sierrahilbun/routes/bindings.dart';
 import 'package:sierrahilbun/routes/route_manager.dart';
 import 'package:sierrahilbun/utils/app_size.dart';
 
@@ -15,6 +16,7 @@ class MainApp extends StatelessWidget {
       AppSize.size =
           MediaQuery.of(context).size;
       return GetMaterialApp(
+
         debugShowCheckedModeBanner: false,
         title: AppStrings.appName,
         theme: ThemeData(
@@ -24,6 +26,7 @@ class MainApp extends StatelessWidget {
         ),
         initialRoute: RouteManager.initial,
         getPages: RouteManager.getPages(),
+        initialBinding: AppBindings(),
       );
     });
   }
