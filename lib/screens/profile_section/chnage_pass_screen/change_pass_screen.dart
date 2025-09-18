@@ -50,75 +50,77 @@ class ChangePassScreen extends StatelessWidget {
           textAlignment: TextAlign.center,
         ),
       ),
-      body: Column(
-        children: [
-          AppImage(
-            width: AppSize.size.width * 0.6,
-            path: AppImagePath.changePassImg,
-          ),
-
-          Padding(
-            padding: EdgeInsets.all(AppSize.width(value: 16)),
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: .1), // Shadow color
-                    offset: Offset(
-                      0,
-                      2,
-                    ), // Vertical offset, giving shadow on bottom
-                    blurRadius: 8, // Blur radius
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: .1), // Shadow color
-                    offset: Offset(
-                      0,
-                      -2,
-                    ), // Vertical offset, giving shadow on top
-                    blurRadius: 8, // Blur radius
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(AppSize.width(value: 20)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: AppSize.size.height * 0.01,
-                children: [
-
-                  TextWidget(text: 'Old Password',
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                  TextFieldWidget(
-                      borderRadius: 12,
-                      controller: controller, hintText: "Old Password"),
-
-                  TextWidget(text: 'New Password',
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                  TextFieldWidget(
-                      borderRadius: 12,
-                      controller: controller, hintText: "New Password"),
-
-                  TextWidget(text: 'Confirm Password',
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-
-                  TextFieldWidget(
-                      borderRadius: 12,
-                      controller: controller, hintText: "Enter Confirm Password"),
-
-
-                ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AppImage(
+              width: AppSize.size.width * 0.6,
+              path: AppImagePath.changePassImg,
+            ),
+        
+            Padding(
+              padding: EdgeInsets.all(AppSize.width(value: 16)),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .1), // Shadow color
+                      offset: Offset(
+                        0,
+                        2,
+                      ), // Vertical offset, giving shadow on bottom
+                      blurRadius: 8, // Blur radius
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .1), // Shadow color
+                      offset: Offset(
+                        0,
+                        -2,
+                      ), // Vertical offset, giving shadow on top
+                      blurRadius: 8, // Blur radius
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.all(AppSize.width(value: 20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: AppSize.size.height * 0.01,
+                  children: [
+        
+                    TextWidget(text: 'Old Password',
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                    TextFieldWidget(
+                        borderRadius: 12,
+                        controller: controller, hintText: "Old Password"),
+        
+                    TextWidget(text: 'New Password',
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                    TextFieldWidget(
+                        borderRadius: 12,
+                        controller: controller, hintText: "New Password"),
+        
+                    TextWidget(text: 'Confirm Password',
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+        
+                    TextFieldWidget(
+                        borderRadius: 12,
+                        controller: controller, hintText: "Enter Confirm Password"),
+        
+        
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

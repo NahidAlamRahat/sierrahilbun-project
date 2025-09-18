@@ -1,112 +1,79 @@
-// Main Navigation Widget
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../home_screen/home_screen.dart';
 import '../profile_section/profile_screen/profile_screen.dart';
 import '../upload_document/upload_document_screen.dart';
+import 'controller/bottom_nav_controller.dart';
 
-class SwipeableBottomNavigation extends StatefulWidget {
-  @override
-  _SwipeableBottomNavigationState createState() => _SwipeableBottomNavigationState();
-}
-
-class _SwipeableBottomNavigationState extends State<SwipeableBottomNavigation> {
-  PageController _pageController = PageController();
-  int _currentIndex = 0;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onPageChanged(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  void _onTabTapped(int index) {
-    _pageController.animateToPage(
-      index,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
+class SwipeableBottomNavigation extends StatelessWidget {
+  const SwipeableBottomNavigation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [ Column(
-          children: [
-            // Main content area with PageView
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                children: [
-                  // Home Page - Your existing HomeScreen content
-                  HomeScreen(),
-        
-                  // Upload Document Page
-                  UploadDocumentScreen(),
-        
-                  // Profile Page
-                  ProfileScreen(),
-                ],
+    return GetBuilder<BottomNavController>(
+      init: BottomNavController(),
+      builder: (controller) {
+        return Scaffold(
+          body: Column(
+            children: [
+              // Main content area with PageView
+              Expanded(
+                child: PageView(
+                  controller: controller.pageController,
+                  onPageChanged: controller.onPageChanged,
+                  children: [
+                    HomeScreen(),
+                    UploadDocumentScreen(),
+                    ProfileScreen(),
+                  ],
+                ),
               ),
-            ),
-        
-            // Custom Bottom Navigation
-            Container(
-              padding: EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.transparent
-              ),
-              child: SizedBox(
-                width: 250,
-                child: Card(
-                  color: Colors.white,
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: Container(
-                    height: 70,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildNavItem(0, Icons.home),
-                        _buildNavItem(1, Icons.add),
-                        _buildNavItem(2, Icons.person_outline),
-                      ],
+
+              // Custom Bottom Navigation
+              Container(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: SizedBox(
+                  width: 250,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Container(
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildNavItem(controller, 0, Icons.home),
+                          _buildNavItem(controller, 1, Icons.add),
+                          _buildNavItem(controller, 2, Icons.person_outline),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        
-        
-          ],
-        ),
-        ]
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon) {
-    bool isSelected = _currentIndex == index;
+  Widget _buildNavItem(BottomNavController controller, int index, IconData icon) {
+    bool isSelected = controller.currentIndex == index;
 
     return GestureDetector(
-      onTap: () => _onTabTapped(index),
+      onTap: () => controller.onTabTapped(index),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         width: 45,
         height: 45,
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xFF48B14C) : Colors.grey[300],
+          color: isSelected ? const Color(0xFF48B14C) : Colors.grey[300],
           borderRadius: BorderRadius.circular(22.5),
         ),
         child: Icon(

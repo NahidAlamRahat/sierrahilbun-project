@@ -159,6 +159,8 @@ class SignInScreen extends StatelessWidget {
                       // onPressed: _userSignInController.onTapSignInButton,
 
                       onPressed: (){
+                        Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+
                       },
 
                       label: "Sign In ➔",
