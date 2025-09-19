@@ -10,7 +10,6 @@ import '../../../../widgets/text_button_widget/text_button_widget.dart';
 import '../../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../../widgets/text_widget/text_widgets.dart';
 import '../../../constants/app_image_path.dart';
-import '../../../utils/app_size.dart';
 import '../../../widgets/image_widget/image_widget.dart';
 import '../../terms_condition_screen/terms_condition_screen.dart';
 import 'controller/sign_up_controller.dart';
@@ -35,7 +34,7 @@ class SignUpScreen extends StatelessWidget {
         key: _signUpController.formKey,
         child: CustomScrollView(
           slivers: [
-            // App Bar with animated logo and titles
+            // Your existing SliverAppBar code (no changes needed here)
             SliverAppBar(
               backgroundColor: Colors.white,
               elevation: 0,
@@ -44,21 +43,23 @@ class SignUpScreen extends StatelessWidget {
               automaticallyImplyLeading: false,
               flexibleSpace: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  // Calculate the collapse ratio (0.0 = fully expanded, 1.0 = fully collapsed)
                   final double appBarHeight = constraints.maxHeight;
-                  final double statusBarHeight = MediaQuery.of(context).padding.top;
+                  final double statusBarHeight = MediaQuery.of(
+                    context,
+                  ).padding.top;
                   final double minHeight = kToolbarHeight + statusBarHeight;
                   final double maxHeight = 225.0 + statusBarHeight;
-
-                  final double collapseRatio = ((maxHeight - appBarHeight) / (maxHeight - minHeight)).clamp(0.0, 1.0);
-
-                  // Calculate logo size based on collapse ratio
-                  final double logoSize = (127 * (1 - collapseRatio * 0.8)).clamp(25.0, 127.0);
-                  final double logoHeight = (130 * (1 - collapseRatio * 0.8)).clamp(25.0, 130.0);
-
-                  // Calculate opacity for logo
-                  final double logoOpacity = (1 - collapseRatio * 1.5).clamp(0.0, 1.0);
-
+                  final double collapseRatio =
+                      ((maxHeight - appBarHeight) / (maxHeight - minHeight))
+                          .clamp(0.0, 1.0);
+                  final double logoSize = (127 * (1 - collapseRatio * 0.8))
+                      .clamp(25.0, 127.0);
+                  final double logoHeight = (130 * (1 - collapseRatio * 0.8))
+                      .clamp(25.0, 130.0);
+                  final double logoOpacity = (1 - collapseRatio * 1.5).clamp(
+                    0.0,
+                    1.0,
+                  );
                   return FlexibleSpaceBar(
                     centerTitle: true,
                     title: Column(
@@ -91,7 +92,7 @@ class SignUpScreen extends StatelessWidget {
                         children: [
                           AnimatedOpacity(
                             opacity: logoOpacity,
-                            duration: Duration.zero, // Instant animation for smooth scroll
+                            duration: Duration.zero,
                             child: AnimatedContainer(
                               duration: Duration.zero,
                               width: logoSize,
@@ -119,21 +120,25 @@ class SignUpScreen extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   const SpaceWidget(spaceHeight: 20),
-
-                  // Form Fields
                   buildFormFieldColumn(),
-
                   const SpaceWidget(spaceHeight: 20),
 
-                  // Submit Button
-                  ButtonWidget(
-                    backgroundColor: AppColors.commonButtonColor,
-                    onPressed: () => _signUpController.onTapSignUpButton(),
-                    label: "Sign Up ➔",
-                    buttonWidth: double.infinity,
-                  ),
+                  // --- UPDATED SUBMIT BUTTON ---
+                  Obx(() {
+                    return _signUpController.isLoading.value
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.commonButtonColor,
+                            ),
+                          )
+                        : ButtonWidget(
+                            backgroundColor: AppColors.commonButtonColor,
+                            onPressed: _signUpController.onTapSignUpButton,
+                            label: "Sign Up ➔",
+                            buttonWidth: double.infinity,
+                          );
+                  }),
 
-                  // Google and Apple login
                   const SpaceWidget(spaceHeight: 16),
                   SocialLoginWidget(
                     imagePath: AppImagePath.googleIcon,
@@ -142,11 +147,9 @@ class SignUpScreen extends StatelessWidget {
                       Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
                     },
                   ),
-
                   const SpaceWidget(spaceHeight: 20),
                   buildTermsCheckbox(),
-
-                  const SpaceWidget(spaceHeight: 40), // Bottom padding
+                  const SpaceWidget(spaceHeight: 40),
                 ]),
               ),
             ),
@@ -157,6 +160,7 @@ class SignUpScreen extends StatelessWidget {
   }
 
   Widget buildFormFieldColumn() {
+    // This widget contains all your text fields and remains unchanged.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -172,10 +176,7 @@ class SignUpScreen extends StatelessWidget {
           borderRadius: 12,
           validator: _signUpController.validateName,
         ),
-
         const SpaceWidget(spaceHeight: 12),
-
-        // Email
         TextWidget(
           text: 'Email',
           fontColor: AppColors.green500,
@@ -188,10 +189,7 @@ class SignUpScreen extends StatelessWidget {
           borderRadius: 12,
           validator: _signUpController.validateEmail,
         ),
-
         const SpaceWidget(spaceHeight: 12),
-
-        // Phone
         TextWidget(
           text: 'Phone Number',
           fontColor: AppColors.green500,
@@ -204,10 +202,7 @@ class SignUpScreen extends StatelessWidget {
           borderRadius: 12,
           validator: _signUpController.validatePhone,
         ),
-
         const SpaceWidget(spaceHeight: 12),
-
-        // Password
         TextWidget(
           text: AppStrings.password,
           fontColor: AppColors.green500,
@@ -221,10 +216,7 @@ class SignUpScreen extends StatelessWidget {
           suffixIcon: true,
           validator: _signUpController.validatePassword,
         ),
-
         const SpaceWidget(spaceHeight: 12),
-
-        // Confirm Password
         TextWidget(
           text: AppStrings.confirmPassword,
           fontColor: AppColors.green500,
@@ -242,12 +234,11 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// SignUp Prompt Section
   Widget buildSignUpPromptSection(BuildContext context) {
+    // This widget remains unchanged.
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
     final isMobile = screenWidth < 400;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -270,35 +261,33 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
+  // --- UPDATED CHECKBOX WIDGET ---
   Row buildTermsCheckbox() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GetBuilder<SignUpController>(
-          builder: (signUpController) {
-            return GestureDetector(
-              onTap: () {
-                signUpController.toggleCheckbox();
-              },
-              child: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: signUpController.isChecked
-                      ? Colors.green
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: Colors.green, width: 2),
-                ),
-                child: signUpController.isChecked
-                    ? const Icon(Icons.check, color: Colors.white, size: 18)
-                    : null,
+        // Obx widget listens for changes to isChecked.value
+        Obx(() {
+          return GestureDetector(
+            onTap: _signUpController.toggleCheckbox,
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: _signUpController.isChecked.value
+                    ? Colors.green
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.green, width: 2),
               ),
-            );
-          },
-        ),
+              child: _signUpController.isChecked.value
+                  ? const Icon(Icons.check, color: Colors.white, size: 18)
+                  : null,
+            ),
+          );
+        }),
         const SizedBox(width: 12),
-        Flexible(
+        const Flexible(
           child: Text('I agree to the Terms & Conditions and Privacy Policy'),
         ),
       ],

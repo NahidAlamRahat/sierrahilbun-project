@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:sierrahilbun/routes/app_routes.dart';
+import 'package:sierrahilbun/services/repository/auth_repository/auth_repository.dart';
+import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
 import '../../../../utils/app_log/app_log.dart';
 
 class SignUpController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // Controllers
+  // Text Field Controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  String? selectedRole;
-  bool isChecked = false;
-  bool inProgress = false;
+  // --- State variables are now reactive (.obs) for better UI updates ---
+  var isChecked = false.obs;
+  var isLoading = false.obs;
 
   // Toggle checkbox
   void toggleCheckbox() {
-    isChecked = !isChecked;
-    update();
+    isChecked.value = !isChecked.value;
   }
 
-  // ✅ Validators
+  // ✅ Validators (no changes needed here)
   String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Enter Full Name";
@@ -50,7 +49,9 @@ class SignUpController extends GetxController {
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return "Enter Phone Number";
-    } else if (!RegExp(r'^[0-9]{10,15}$').hasMatch(value)) {
+    }
+    // Updated regex to be more flexible for international numbers
+    else if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
       return "Enter a valid Phone Number";
     }
     return null;
@@ -74,11 +75,57 @@ class SignUpController extends GetxController {
     return null;
   }
 
+  /// --- FULLY IMPLEMENTED SIGNUP LOGIC ---
   Future<void> onTapSignUpButton() async {
-    if (formKey.currentState!.validate()) {
-      Get.toNamed(AppRoutes.createPassVerifyOtpScreen,arguments: {'email': emailController.text.trim()});
-      appLog("✅ Form Validated. Ready to send API call.");
-      // Call your signup API here
+    // 1. Check if terms are accepted
+    if (!isChecked.value) {
+      AppSnackBar.message("Please agree to the Terms & Conditions and Privacy Policy.");
+      return;
     }
+
+    // 2. Validate the form fields
+    if (formKey.currentState!.validate()) {
+      isLoading.value = true;
+
+      try {
+        // 3. Call the repository to perform the signup
+        final response = await AuthRepository.signUp(
+          name: nameController.text.trim(),
+          email: emailController.text.trim(),
+          contact: phoneController.text.trim(),
+          password: passwordController.text,
+          confirmPassword: confirmPasswordController.text,
+        );
+
+        // 4. Handle successful registration
+        appLog("✅ SignUp Successful: ${response.message}");
+        AppSnackBar.success(response.message);
+
+        // Navigate to the OTP verification screen with the user's email
+        Get.toNamed(
+          AppRoutes.createPassVerifyOtpScreen,
+          arguments: {'email': emailController.text.trim()},
+        );
+
+      } catch (e) {
+        // 5. Handle errors by showing a snackbar
+        AppSnackBar.message(e.toString());
+        appLog("❌ SignUp Failed: $e");
+      } finally {
+        // 6. Always turn off the loader
+        isLoading.value = false;
+      }
+    }
+  }
+
+  @override
+  void onClose() {
+    // Dispose all text controllers to prevent memory leaks
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.onClose();
   }
 }

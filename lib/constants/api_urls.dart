@@ -15,4 +15,6 @@ class ApiUrls {
 
   // The endpoint should ONLY be the path, not the full URL
   static const String login = "auth/login";
+  //signUp
+  static const String signUp = "user";
 }
