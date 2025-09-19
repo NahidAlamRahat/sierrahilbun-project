@@ -13,7 +13,6 @@ import '../../../constants/app_image_path.dart';
 import '../../../utils/app_size.dart';
 import '../../../widgets/image_widget/image_widget.dart';
 // Note: Assuming PrivacyPolicyWidget is in this location
-import '../../terms_condition_screen/terms_condition_screen.dart';
 import 'controller/sign_in_controller.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -137,27 +136,7 @@ class SignInScreen extends StatelessWidget {
                 ),
                 const SpaceWidget(spaceHeight: 12),
 
-                /// --- THIS IS THE UPDATED SECTION --- ///
-                Obx(() {
-                  // Display error message if it exists
-                  if (_userSignInController.errorMessage.value.isNotEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Center(
-                        child: Text(
-                          _userSignInController.errorMessage.value,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
-
+                /// --- ERROR HANDLING WITH GETX SNACKBAR --- ///
                 Obx(() {
                   // Show a loading indicator OR the login button
                   return _userSignInController.isLoading.value
