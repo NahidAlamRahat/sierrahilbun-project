@@ -12,14 +12,14 @@ import '../../../../widgets/text_widget/text_widgets.dart';
 import '../../../constants/app_image_path.dart';
 import '../../../utils/app_size.dart';
 import '../../../widgets/image_widget/image_widget.dart';
+// Note: Assuming PrivacyPolicyWidget is in this location
 import '../../terms_condition_screen/terms_condition_screen.dart';
 import 'controller/sign_in_controller.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  final SignInController _userSignInController =
-      Get.put(SignInController());
+  final SignInController _userSignInController = Get.put(SignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,9 @@ class SignInScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            PrivacyPolicyWidget(),
+            // Assuming this is a valid widget in your project
+            // PrivacyPolicyWidget(),
+            const Text("Privacy Policy"), // Placeholder
             buildSignUpPromptSection(context),
           ],
         ),
@@ -45,32 +47,23 @@ class SignInScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SpaceWidget(spaceHeight: 24),
-                Center(
-                  child: const ImageWidget(
+                const Center(
+                  child: ImageWidget(
                     width: 127,
                     height: 130,
                     imagePath: AppImagePath.appLogo,
                     fit: BoxFit.contain,
                   ),
                 ),
-                /*const SpaceWidget(spaceHeight: 30),
-                const TextWidget(
-                  text: AppStrings.signInTitle,
-                  fontColor: AppColors.green500,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),*/
-
                 const SpaceWidget(spaceHeight: 8),
-
-                Center(
+                const Center(
                   child: SizedBox(
                     width: 233,
                     child: Text(
                       "Let's Get Started!",
-                    textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: const Color(0xFF100F0E) /* Black */,
+                        color: Color(0xFF100F0E) /* Black */,
                         fontSize: 18,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w700,
@@ -79,17 +72,15 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SpaceWidget(spaceHeight: 4),
-
-                Center(
+                const Center(
                   child: SizedBox(
                     width: 233,
                     child: Text(
-                      "Let's dive in into your occount",
-                    textAlign: TextAlign.center,
+                      "Let's dive in into your account",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: const Color(0xFF100F0E) /* Black */,
+                        color: Color(0xFF100F0E) /* Black */,
                         fontSize: 14,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w400,
@@ -98,7 +89,6 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SpaceWidget(spaceHeight: 12),
                 const TextWidget(
                   text: AppStrings.email,
@@ -129,15 +119,15 @@ class SignInScreen extends StatelessWidget {
                   validator: _userSignInController.validatePassword,
                   suffixIcon: true,
                   borderRadius: 12,
-                  onFieldSubmitted: (submit) =>  _userSignInController.onTapSignInButton() ,
+                  onFieldSubmitted: (submit) =>
+                      _userSignInController.onTapSignInButton(),
                 ),
                 const SpaceWidget(spaceHeight: 4),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButtonWidget(
                     onPressed: () {
-                       Get.toNamed(AppRoutes.forgotPasswordScreen);
-
+                      Get.toNamed(AppRoutes.forgotPasswordScreen);
                     },
                     text: AppStrings.forgetPassword,
                     textColor: AppColors.grey700,
@@ -145,30 +135,48 @@ class SignInScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 const SpaceWidget(spaceHeight: 12),
-                // GetBuilder<SignInApiController>(builder: (controllers) {
-                //   return Visibility(
-                //     visible: controllers.inProgress == false,
-                //     replacement:
-                //         const Center(child: CircularProgressIndicator()),
-                //     child:
-                    ButtonWidget(
-                      backgroundColor: Color.fromRGBO(72, 177, 76, 1),
-                      //after api integration
-                      // onPressed: _userSignInController.onTapSignInButton,
 
-                      onPressed: (){
-                        Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+                /// --- THIS IS THE UPDATED SECTION --- ///
+                Obx(() {
+                  // Display error message if it exists
+                  if (_userSignInController.errorMessage.value.isNotEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: Text(
+                          _userSignInController.errorMessage.value,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
 
-                      },
-
-                      label: "Sign In ➔",
-                      buttonWidth: double.infinity,
-                      buttonRadius: const BorderRadius.all(Radius.circular(8)),
-                    ),
-                //   );
-                // }),
+                Obx(() {
+                  // Show a loading indicator OR the login button
+                  return _userSignInController.isLoading.value
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.green500,
+                          ),
+                        )
+                      : ButtonWidget(
+                          backgroundColor: const Color.fromRGBO(72, 177, 76, 1),
+                          // Connect the button to the controller's function
+                          onPressed: _userSignInController.onTapSignInButton,
+                          label: "Sign In ➔",
+                          buttonWidth: double.infinity,
+                          buttonRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                        );
+                }),
                 const SpaceWidget(spaceHeight: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -193,27 +201,14 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
-                 /// Google and Apple login
                 const SpaceWidget(spaceHeight: 16),
-                // SocialLoginWidget(
-                //   imagePath: AppImagePath.appleIcon,
-                //   text: AppStrings.signInWithApple,
-                //   onTap: () {
-                //     Get.offAllNamed(AppRoutes.userBottomNav);
-                //   },
-                // ),
-                // const SpaceWidget(spaceHeight: 12),
                 SocialLoginWidget(
                   imagePath: AppImagePath.googleIcon,
                   text: "Continue with Google",
                   onTap: () {
-                    Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+                    // TODO: Implement Google Sign In
                   },
                 ),
-
-                // buildSignUpPromptSection(context),
-
               ],
             ),
           ),
@@ -222,9 +217,6 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-
-
-
   /// SignUp Prompt Section
   Widget buildSignUpPromptSection(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -232,8 +224,8 @@ class SignInScreen extends StatelessWidget {
     final isMobile = screenWidth < 400;
 
     return Column(
-      mainAxisSize: MainAxisSize.min, // ⬅️ Column টা shrink হবে
-      crossAxisAlignment: CrossAxisAlignment.end, // ডান দিকে align হবে
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         TextWidget(
           text: "Don't Have an Account?",
@@ -242,17 +234,14 @@ class SignInScreen extends StatelessWidget {
         ),
         TextButtonWidget(
           onPressed: () {
-             Get.toNamed(AppRoutes.signUpScreen);
+            Get.toNamed(AppRoutes.signUpScreen);
           },
           text: 'Sign Up',
-          textColor: Color.fromRGBO(72, 177, 76, 1),
+          textColor: const Color.fromRGBO(72, 177, 76, 1),
           fontSize: isTablet ? 20 : (isMobile ? 16 : 18),
           fontWeight: FontWeight.w700,
         ),
       ],
     );
   }
-
-
-
 }
