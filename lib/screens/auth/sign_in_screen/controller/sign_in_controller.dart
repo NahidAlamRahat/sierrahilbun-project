@@ -7,14 +7,26 @@ import 'package:sierrahilbun/services/storage/storage_service.dart';
 
 class SignInController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   // --- UPDATED SECTION ---
   // Observable variables for UI state management.
   // .obs makes them reactive, so the UI updates automatically.
   var isLoading = false.obs;
+
   // Removed errorMessage since we'll use GetX snackbar
+  @override
+  void onInit() {
+    initial();
+    super.onInit();
+
+  }
+
+  void initial() async {
+     emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
   // -------------------------
 
   // Validate Email

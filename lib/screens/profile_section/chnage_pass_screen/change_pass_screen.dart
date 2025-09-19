@@ -9,14 +9,11 @@ import '../../../widgets/appbar_widget/appbar_widget.dart';
 import '../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
 
-
 class ChangePassScreen extends StatelessWidget {
   TextEditingController controller = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: AppColors.appBackgroundColor,
       resizeToAvoidBottomInset: false,
@@ -38,14 +35,16 @@ class ChangePassScreen extends StatelessWidget {
       //   text: "Change Password",
       //   appThemeColor: appThemeColor,
       // ),
-      appBar:  AppbarWidget(
+      appBar: AppbarWidget(
         backgroundColor: AppColors.appBackgroundColor,
         leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(Icons.arrow_back_ios_new,color: Colors.black,)),
+          onTap: () => Get.back(),
+          child: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+        ),
         text: "Change Password",
-        textWidget: TextWidget(text: "Change Password",
-        fontSize: 18,
+        textWidget: TextWidget(
+          text: "Change Password",
+          fontSize: 18,
           fontWeight: FontWeight.w700,
           textAlignment: TextAlign.center,
         ),
@@ -57,7 +56,7 @@ class ChangePassScreen extends StatelessWidget {
               width: AppSize.size.width * 0.6,
               path: AppImagePath.changePassImg,
             ),
-        
+
             Padding(
               padding: EdgeInsets.all(AppSize.width(value: 16)),
               child: Container(
@@ -88,33 +87,39 @@ class ChangePassScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: AppSize.size.height * 0.01,
                   children: [
-        
-                    TextWidget(text: 'Old Password',
+                    TextWidget(
+                      text: 'Old Password',
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w500,
                     ),
                     TextFieldWidget(
-                        borderRadius: 12,
-                        controller: controller, hintText: "Old Password"),
-        
-                    TextWidget(text: 'New Password',
+                      borderRadius: 12,
+                      controller: controller,
+                      hintText: "Old Password",
+                    ),
+
+                    TextWidget(
+                      text: 'New Password',
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w500,
                     ),
                     TextFieldWidget(
-                        borderRadius: 12,
-                        controller: controller, hintText: "New Password"),
-        
-                    TextWidget(text: 'Confirm Password',
+                      borderRadius: 12,
+                      controller: controller,
+                      hintText: "New Password",
+                    ),
+
+                    TextWidget(
+                      text: 'Confirm Password',
                       fontFamily: 'Outfit',
                       fontWeight: FontWeight.w500,
                     ),
-        
+
                     TextFieldWidget(
-                        borderRadius: 12,
-                        controller: controller, hintText: "Enter Confirm Password"),
-        
-        
+                      borderRadius: 12,
+                      controller: controller,
+                      hintText: "Enter Confirm Password",
+                    ),
                   ],
                 ),
               ),

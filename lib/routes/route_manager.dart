@@ -37,7 +37,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.signInScreen,
         page: () => SignInScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(
@@ -67,7 +67,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.signUpScreen,
         page: () => SignUpScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(

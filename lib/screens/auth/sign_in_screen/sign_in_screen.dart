@@ -18,7 +18,7 @@ import 'controller/sign_in_controller.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  final SignInController _userSignInController = Get.put(SignInController());
+  final SignInController _userSignInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class SignInScreen extends StatelessWidget {
         ),
         TextButtonWidget(
           onPressed: () {
-            Get.toNamed(AppRoutes.signUpScreen);
+            Get.offAllNamed(AppRoutes.signUpScreen);
           },
           text: 'Sign Up',
           textColor: const Color.fromRGBO(72, 177, 76, 1),

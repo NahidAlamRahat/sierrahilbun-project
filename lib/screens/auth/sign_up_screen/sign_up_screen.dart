@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sierrahilbun/routes/app_routes.dart';
+import 'package:sierrahilbun/screens/auth/sign_in_screen/controller/sign_in_controller.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/widgets/social_login_widget.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_strings.dart';
@@ -17,7 +18,7 @@ import 'controller/sign_up_controller.dart';
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
-  final SignUpController _signUpController = Get.put(SignUpController());
+  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -249,8 +250,8 @@ class SignUpScreen extends StatelessWidget {
           fontSize: isTablet ? 14 : (isMobile ? 11 : 12),
         ),
         TextButtonWidget(
-          onPressed: () {
-            Get.toNamed(AppRoutes.signInScreen);
+          onPressed: () async {
+            Get.offAllNamed(AppRoutes.signInScreen);
           },
           text: 'Sign In',
           textColor: Color.fromRGBO(72, 177, 76, 1),
