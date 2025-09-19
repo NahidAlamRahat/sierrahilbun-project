@@ -1,5 +1,6 @@
 import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/model/api_response_model.dart';
+import 'package:sierrahilbun/model/otp_response_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/model/signin_response_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_up_screen/model/sign_up_response_model.dart';
 import 'package:sierrahilbun/services/api/api_services.dart';
@@ -79,4 +80,49 @@ class AuthRepository {
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
+
+    // --- NEW VERIFY OTP METHOD ---
+  static Future<OtpResponseModel> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
+    // Construct the request body to match the Postman request.
+    final Map<String, dynamic> body = {
+      "email": email,
+      "oneTimeCode": int.tryParse(otp) ?? 0, // API expects an integer
+    };
+
+    try {
+      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.verifyOtp, body);
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog("AuthRepository Verify OTP Error: $e", source: "Auth Repository");
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
+
+  // --- NEW RESEND OTP METHOD ---
+  static Future<OtpResponseModel> resendOtp({
+    required String email,
+  }) async {
+    // The resend OTP endpoint typically only needs the user's email.
+    final Map<String, dynamic> body = { "email": email };
+
+    try {
+      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.resendOtp, body);
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog("AuthRepository Resend OTP Error: $e", source: "Auth Repository");
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
+
 }

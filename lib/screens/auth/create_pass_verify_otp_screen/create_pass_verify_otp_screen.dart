@@ -16,159 +16,124 @@ import '../../terms_condition_screen/terms_condition_screen.dart';
 import 'controller/create_pass_verify_otp_screen_controller.dart';
 
 class CreatePassVerifyOtpScreen extends StatelessWidget {
+  CreatePassVerifyOtpScreen({super.key});
 
-  CreatePassVerifyOtpScreenController controller = Get.put(CreatePassVerifyOtpScreenController());
-
-
-
+  final CreatePassVerifyOtpScreenController controller = Get.find<CreatePassVerifyOtpScreenController>();
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppbarWidget(),
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           children: [
+            Image.asset(AppImagePath.otpImage),
+            const TextWidget(
+              text: "Verify Your Account",
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+            const TextWidget(
+              text:
+                  "We’ve sent a verification code to your email. Enter the code below to continue and secure your account.",
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            SizedBox(height: AppSize.height(value: 30)),
+            TextWidget(
+              text: "We've Sent a Code to ${controller.email}",
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+            SizedBox(height: AppSize.height(value: 20)),
+            _buildPinCodeTextField(context),
+            SizedBox(height: AppSize.height(value: 20)),
 
-             Image.asset(AppImagePath.otpImage),
-        
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                children: [
-        
-                  TextWidget(text: "Verify Your Account",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-        
-                  TextWidget(
-                    text: "We’ve sent a verification code to your email/phone. Enter the code below to continue and secure your account.",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  SizedBox(height: AppSize.height(value: 30)),
-        
-        
-                  TextWidget(
-                    text: "We've Sent a Code to ${controller.email}",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
-        
-                  SizedBox(height: AppSize.height(value: 20)),
-        
-                  _buildPinCodeTextField(context),
-        
-                  SizedBox(height: AppSize.height(value: 20)),
+            // --- UPDATED BUTTON & LOADING INDICATOR ---
+            Obx(() {
+              return controller.isLoading.value
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.commonButtonColor,
+                      ),
+                    )
+                  : ButtonWidget(
+                      backgroundColor: const Color.fromRGBO(72, 177, 76, 1),
+                      onPressed: controller
+                          .onTapVerifyButton, // <-- Connect to controller method
+                      label: "Verify and Continue",
+                      buttonWidth: double.infinity,
+                      buttonRadius: const BorderRadius.all(Radius.circular(8)),
+                    );
+            }),
 
+            SizedBox(height: AppSize.height(value: 20)),
 
-                  ButtonWidget(
-                    backgroundColor: Color.fromRGBO(72, 177, 76, 1),
-                    onPressed: (){
-                      Get.toNamed(AppRoutes.locationScreen);
-                    },
-                    label: "Verify and Continue",
-                    buttonWidth: double.infinity,
-                    buttonRadius: const BorderRadius.all(Radius.circular(8)),
-                  ),
-        
-                  SizedBox(height: AppSize.height(value: 20)),
-        
-                  Obx(() {
-                    return TextWidget(
-                      text: controller.canResend.value
-                          ? 'Remaining Time 00.00'
-                          : "Send code again in ${controller.formatTime()}",
-                      fontColor: controller.canResend.value
-                          ? Colors.grey
-                          : Colors.grey.shade500,
+            // --- RESEND CODE LOGIC ---
+            Obx(() {
+              return controller.canResend.value
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const TextWidget(
+                          text: "Didn't receive code?",
+                          fontColor: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        const SpaceWidget(spaceWidth: 6),
+                        TextButtonWidget(
+                          onPressed: controller
+                              .resendCode, // <-- Connect to controller method
+                          text: 'Resend',
+                          textColor: AppColors.commonButtonColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ],
+                    )
+                  : TextWidget(
+                      text: "Send code again in ${controller.formatTime()}",
+                      fontColor: Colors.grey.shade500,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     );
-                  }),
-        
-                  const SpaceWidget(spaceHeight: 12),
-                  Obx(() {
-                    // Debugging check
-                    if (controller.canResend.value) {
-                      appLog("Resend Code Button is now visible!");
-                    }
-                    return controller.canResend.value
-                        ? Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const TextWidget(
-                            text: "Didn't receive code?'",
-                            fontColor: Colors.grey,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            maxLines: 1,
-                          ),
-                          const SpaceWidget(spaceWidth: 6),
-                          TextButtonWidget(
-                            onPressed: () {
-                              controller.resendCode();
-                            },
-                            text: 'Resend',
-                            textColor: AppColors.commonButtonColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ],
-                      ),
-                    )
-                        : const SizedBox.shrink();
-                  }),
-        
-                ],
-              ),
-            ),
-        
+            }),
           ],
         ),
       ),
     );
   }
+
   Widget _buildPinCodeTextField(BuildContext context) {
     return Form(
-       key: controller.formKey,
+      key: controller.formKey,
       child: PinCodeTextField(
-        ///validator
-        // validator: (value) {
-        //   if(value?.trim().isEmpty == true){
-        //     return 'Enter Correct Otp';
-        //   }
-        //   return null;
-        // } ,
-
         length: 6,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         obscureText: false,
         animationType: AnimationType.fade,
         keyboardType: TextInputType.number,
         pinTheme: PinTheme(
-            shape: PinCodeFieldShape.box,
-            borderRadius: BorderRadius.circular(5),
-            fieldHeight: 50,
-            fieldWidth: 50,
-            activeFillColor: Colors.white,
-            inactiveFillColor: Colors.white,
-            selectedFillColor: Colors.white),
+          shape: PinCodeFieldShape.box,
+          borderRadius: BorderRadius.circular(5),
+          fieldHeight: 50,
+          fieldWidth: 50,
+          activeFillColor: Colors.white,
+          inactiveFillColor: Colors.white,
+          selectedFillColor: Colors.white,
+          activeColor: AppColors.commonButtonColor,
+          inactiveColor: Colors.grey.shade300,
+          selectedColor: AppColors.commonButtonColor,
+        ),
         animationDuration: const Duration(milliseconds: 300),
         backgroundColor: Colors.transparent,
         enableActiveFill: true,
-         controller: controller.otpTextEditingController,
+        controller: controller.otpTextEditingController,
         appContext: context,
       ),
     );
   }
-
 }

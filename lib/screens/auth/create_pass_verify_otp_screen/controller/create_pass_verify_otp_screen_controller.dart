@@ -1,67 +1,69 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sierrahilbun/routes/app_routes.dart';
+import 'package:sierrahilbun/services/repository/auth_repository/auth_repository.dart';
 import '../../../../../utils/app_log/app_log.dart';
 import '../../../../widgets/app_snack_bar/app_snack_bar.dart';
 
 class CreatePassVerifyOtpScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController otpTextEditingController =
+      TextEditingController();
 
-  TextEditingController otpTextEditingController = TextEditingController();
-
-
-  var remainingSeconds = 180.obs; // 2.5 minutes
+  // --- Reactive state variables ---
+  var remainingSeconds = 10.obs; // 3 minutes
   var canResend = false.obs;
-  late String? email;
-  late Timer _timer;
+  var isLoading = false.obs; // For loading indicator
+
+  late String email;
+  Timer? _timer;
+  bool _isDisposed = false;
 
   @override
   void onInit() {
     super.onInit();
-    startTimer();
-    if (Get.arguments is Map<String, dynamic>) {
-      final args = Get.arguments as Map<String, dynamic>;
-      email = args['email'] ?? '';
+    // Safely get email from arguments passed during navigation
+    final args = Get.arguments;
+    if (args is Map<String, dynamic> && args.containsKey('email')) {
+      email = args['email'];
     } else {
-      // Handle the error or provide a default value
-      email = '';
+      email = ''; // Fallback if email is not passed
+      AppSnackBar.error("Error: Email not found. Please go back.");
     }
+    startTimer();
   }
 
- /* @override
+  @override
   void onClose() {
-    _timer.cancel();
-    otpTextEditingController.dispose();
+    _isDisposed = true;
+    _timer?.cancel(); // Important: cancel the timer to prevent memory leaks
+
+    // Safely dispose the text controller
+    try {
+      otpTextEditingController.dispose();
+    } catch (e) {
+      // Controller might already be disposed, ignore the error
+    }
+
     super.onClose();
   }
-*/
+
   void startTimer() {
+    _timer?.cancel(); // Cancel any existing timer
+    canResend.value = false;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isClosed) {
+        timer.cancel();
+        return;
+      }
       if (remainingSeconds.value > 0) {
         remainingSeconds.value--;
-        /*print(
-            "Timer: ${remainingSeconds.value} seconds remaining");*/ // Debugging
       } else {
         canResend.value = true;
-        appLog("Timer completed. You can resend the code now."); // Debugging
-        _timer.cancel();
+        timer.cancel();
       }
     });
-  }
-
-  /// Resent Otp code
-  void resendCode() async {
-    try {
-      bool isSuccess = /*await AuthRepository().resendOtp(email: email);*/   true;
-      if (isSuccess) {
-        AppSnackBar.success("A new OTP has been sent to your email.");
-        remainingSeconds.value = 180; // Reset the timer
-        canResend.value = false;
-        startTimer(); // Restart the timer
-      }
-    } catch (e) {
-      AppSnackBar.error("An error occurred. Please try again.");
-    }
   }
 
   String formatTime() {
@@ -70,44 +72,56 @@ class CreatePassVerifyOtpScreenController extends GetxController {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSec.toString().padLeft(2, '0')}';
   }
 
+  /// --- FULLY IMPLEMENTED RESEND OTP LOGIC ---
+  void resendCode() async {
+    if (email.isEmpty || isClosed)
+      return; // Don't proceed if email is missing or controller is disposed
 
-  /// OnTap Button
-  // Future<void> onTapForgotPassVerifyButton() async {
-  //   if (formKey.currentState!.validate()) {
-  //     try {
-  //       String otp = otpTextEditingController.text.trim();
-  //
-  //       // VerifyOtpModel verifyOtpModel = VerifyOtpModel(
-  //       //   email: email,
-  //       //   otp: otp,
-  //       // );
-  //       var response = await _verifyOtpController.verifyOtp(
-  //           verifyOtpModel: verifyOtpModel, url: ApiUrls.verifyEmail);
-  //
-  //       appLog("response ==> $response");
-  //
-  //       if (response != null && response["data"] != null) {
-  //         String token = response["data"]?["resetToken"];
-  //
-  //         AppSnackBar.success('${_verifyOtpController.successfullyMessage}');
-  //         appLog(
-  //             'success message => ${_verifyOtpController.successfullyMessage}');
-  //
-  //         AppSnackBar.success("Verification Successful");
-  //         Get.offAllNamed(
-  //           AppRoutes.resetPasswordScreen,
-  //           arguments: {'token': token},
-  //         );
-  //       } else {
-  //         AppSnackBar.message('${_verifyOtpController.errorMessage}');
-  //         appLog('error message => ${_verifyOtpController.errorMessage}');
-  //       }
-  //     } catch (e) {
-  //       AppSnackBar.message('${_verifyOtpController.errorMessage}');
-  //     }
-  //   } else {
-  //     AppSnackBar.error("Please fill in all required fields.");
-  //   }
-  // }
+    isLoading.value = true;
+    try {
+      final response = await AuthRepository.resendOtp(email: email);
+      if (!isClosed) {
+        AppSnackBar.success(response.message);
+        remainingSeconds.value = 180; // Reset the timer
+        startTimer(); // Restart the timer
+      }
+    } catch (e) {
+      if (!isClosed) {
+        AppSnackBar.error(e.toString());
+      }
+    } finally {
+      if (!isClosed) {
+        isLoading.value = false;
+      }
+    }
+  }
 
+  /// --- FULLY IMPLEMENTED VERIFY OTP LOGIC ---
+  Future<void> onTapVerifyButton() async {
+    if (_isDisposed || isClosed) return; // Early exit if controller is disposed
+
+    final String otp = otpTextEditingController.text;
+    if (otp.length != 6) {
+      AppSnackBar.message("Please enter the 6-digit code.");
+      return;
+    }
+    if (email.isEmpty) return;
+
+    isLoading.value = true;
+    try {
+      final response = await AuthRepository.verifyOtp(email: email, otp: otp);
+      if (!_isDisposed && !isClosed) {
+        AppSnackBar.success(response.message);
+        // Clear the loading state before navigation
+        isLoading.value = false;
+        // On successful verification, navigate to the next screen
+        Get.offAllNamed(AppRoutes.signInScreen);
+      }
+    } catch (e) {
+      if (!_isDisposed && !isClosed) {
+        AppSnackBar.error(e.toString());
+        isLoading.value = false;
+      }
+    }
+  }
 }

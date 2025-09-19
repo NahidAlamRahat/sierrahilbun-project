@@ -17,4 +17,8 @@ class ApiUrls {
   static const String login = "auth/login";
   //signUp
   static const String signUp = "user";
+  //verify User
+  static const String verifyOtp = "/auth/verify-email";
+  //resend OTP
+  static const String resendOtp = "/auth/resend-otp";
 }

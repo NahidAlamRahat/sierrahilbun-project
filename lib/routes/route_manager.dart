@@ -1,6 +1,6 @@
-
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:sierrahilbun/my_document_screen/my_document_screen.dart';
+import 'package:sierrahilbun/routes/bindings.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/sign_in_screen.dart';
 import 'package:sierrahilbun/screens/terms_condition_screen/terms_condition_screen.dart';
 import '../screens/auth/create_pass_verify_otp_screen/create_pass_verify_otp_screen.dart';
@@ -8,7 +8,7 @@ import '../screens/auth/create_password_screen/create_password_screen.dart';
 import '../screens/auth/forgot_password/forgot_password_screen.dart';
 import '../screens/auth/forgot_verify_otp_screen/controller/forgot_pass_verify_otp_screen_controller.dart';
 import '../screens/auth/forgot_verify_otp_screen/forgot_pass_verify_otp_screen.dart';
-import '../screens/auth/location_screen/location_screen.dart';
+
 import '../screens/auth/sign_up_screen/sign_up_screen.dart';
 import '../screens/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
 import '../screens/home_screen/controller/home_controller.dart';
@@ -27,63 +27,60 @@ class RouteManager {
 
   static List<GetPage> getPages() {
     return [
-     // General Screens
+      // General Screens
       GetPage(
         name: AppRoutes.splashScreen,
-        page: () =>  SplashScreen(),
+        page: () => SplashScreen(),
         // binding: GeneralBindings(),
       ),
 
-
       GetPage(
         name: AppRoutes.signInScreen,
-        page: () =>  SignInScreen(),
+        page: () => SignInScreen(),
         // binding: GeneralBindings(),
       ),
 
       GetPage(
         name: AppRoutes.termsAndConditionScreen,
-        page: () => TermsAndConditionsScreen (),
+        page: () => TermsAndConditionsScreen(),
         // binding: GeneralBindings(),
       ),
 
-
       GetPage(
         name: AppRoutes.forgotPasswordScreen,
-        page: () => ForgotPasswordScreen (),
+        page: () => ForgotPasswordScreen(),
         // binding: GeneralBindings(),
       ),
 
       GetPage(
         name: AppRoutes.forgotPassVerifyOtpScreen,
-        page: () => ForgotPassVerifyOtpScreen (),
+        page: () => ForgotPassVerifyOtpScreen(),
         // binding: GeneralBindings(),
       ),
 
       GetPage(
         name: AppRoutes.createNewPasswordScreen,
-        page: () => CreateNewPasswordScreen (),
+        page: () => CreateNewPasswordScreen(),
         // binding: GeneralBindings(),
       ),
 
       GetPage(
         name: AppRoutes.signUpScreen,
-        page: () => SignUpScreen (),
+        page: () => SignUpScreen(),
         // binding: GeneralBindings(),
       ),
 
       GetPage(
         name: AppRoutes.createPassVerifyOtpScreen,
-        page: () => CreatePassVerifyOtpScreen (),
-        // binding: GeneralBindings(),
+        page: () => CreatePassVerifyOtpScreen(),
+        binding: AppBindings(),
       ),
 
-      GetPage(
-        name: AppRoutes.locationScreen,
-        page: () => LocationScreen (),
-        // binding: GeneralBindings(),
-      ),
-
+      // GetPage(
+      //   name: AppRoutes.locationScreen,
+      //   page: () => LocationScreen (),
+      //   // binding: GeneralBindings(),
+      // ),
       GetPage(
         name: AppRoutes.homeScreen,
         page: () => HomeScreen(),
@@ -125,8 +122,6 @@ class RouteManager {
         page: () => MyDocumentScreen(),
         // binding: GeneralBindings(),
       ),
-
-
     ];
   }
 }
