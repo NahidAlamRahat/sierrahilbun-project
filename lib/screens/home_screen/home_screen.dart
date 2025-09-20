@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/constants/app_colors.dart';
 import 'package:sierrahilbun/constants/app_image_path.dart';
 import 'package:sierrahilbun/routes/app_routes.dart';
 import 'package:sierrahilbun/screens/home_screen/controller/home_controller.dart';
+import 'package:sierrahilbun/services/storage/storage_service.dart';
 import 'package:sierrahilbun/utils/app_size.dart';
-
-
+import 'package:sierrahilbun/widgets/app_image/app_image_circular.dart';
 
 // Home Page Content (Your existing HomeScreen logic)
 class HomeScreen extends StatelessWidget {
-   HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   HomeController controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: controller.onWillPop ,
+      onWillPop: controller.onWillPop,
       child: Scaffold(
         backgroundColor: Colors.grey[50],
         body: Column(
@@ -38,11 +39,17 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 children: [
                   // Profile Picture
-                  Image.asset(AppImagePath.profileImage),
+                  AppImageCircular(
+                    fit: BoxFit.cover,
+                    url: LocalStorage
+                        .myImage, // Use the user's profile image URL
+                    width: AppSize.width(value: 50),
+                    height: AppSize.width(value: 50),
+                  ),
                   const SizedBox(width: 15),
                   // Hello Text
-                  const Text(
-                    'Hello Sabbir',
+                  Text(
+                    'Hello ${LocalStorage.myName}',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -59,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-      
+
             // Content Section
             Expanded(
               child: Padding(
@@ -79,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Get.toNamed(AppRoutes.myDocumentScreen);
                           },
                           child: Text(
@@ -94,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-      
+
                     // Document Cards
                     Expanded(
                       child: ListView.builder(
@@ -147,7 +154,9 @@ class HomeScreen extends StatelessWidget {
                                           flex: 2,
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 12),
+                                              horizontal: 15,
+                                              vertical: 12,
+                                            ),
                                             child: const Row(
                                               children: [
                                                 Icon(
@@ -177,7 +186,9 @@ class HomeScreen extends StatelessWidget {
                                           flex: 1,
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 12),
+                                              horizontal: 15,
+                                              vertical: 12,
+                                            ),
                                             child: const Text(
                                               'Active',
                                               style: TextStyle(

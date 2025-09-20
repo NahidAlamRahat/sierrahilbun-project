@@ -4,6 +4,7 @@ import 'package:sierrahilbun/constants/app_colors.dart';
 import 'package:sierrahilbun/constants/app_icons_path.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/controller/profile_controller.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/widget/ProfileRow.dart';
+import 'package:sierrahilbun/services/storage/storage_service.dart';
 import '../../../constants/app_image_path.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_size.dart';
@@ -40,8 +41,8 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   AppImageCircular(
                     fit: BoxFit.cover,
-                    url:
-                        "https://cdn.pixabay.com/photo/2016/12/07/21/01/cartoon-1890438_640.jpg",
+                    url: LocalStorage
+                        .myImage, // Use the user's profile image URL
                     width: AppSize.width(value: 124),
                     height: AppSize.width(value: 124),
                   ),
@@ -50,12 +51,13 @@ class ProfileScreen extends StatelessWidget {
                     spacing: AppSize.size.height * 0.014,
                     children: [
                       TextWidget(
-                        text: "Sabbir Ahmed",
+                        text: LocalStorage.myName,
+
                         fontSize: AppSize.width(value: 18),
                         fontWeight: FontWeight.w700,
                       ),
                       TextWidget(
-                        text: "012345-678912",
+                        text: LocalStorage.myContact,
                         fontSize: AppSize.width(value: 14),
                         fontWeight: FontWeight.w500,
                         // Use the text color from the current theme

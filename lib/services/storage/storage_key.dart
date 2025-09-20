@@ -1,4 +1,3 @@
-
 class LocalStorageKeys {
   static const String token = "token";
   static const String cookie = "cookie";
@@ -10,5 +9,6 @@ class LocalStorageKeys {
   static const String myName = "myName";
   static const String myEmail = "myEmail";
   static const String myRole = "myRole";
+  static const String myContact = "myContact";
+  static const String myLocation = "myLocation";
 }
-

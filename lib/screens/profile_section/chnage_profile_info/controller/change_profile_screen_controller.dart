@@ -21,10 +21,11 @@ class ChangeProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Initialize controllers with existing user data
     nameController = TextEditingController(text: LocalStorage.myName);
-    phoneController = TextEditingController(text: "01786543210");
+    phoneController = TextEditingController(text: LocalStorage.myContact);
     emailController = TextEditingController(text: LocalStorage.myEmail);
-    addressController = TextEditingController(text: "Dhaka");
+    addressController = TextEditingController(text: LocalStorage.myLocation);
   }
 
   @override

@@ -8,6 +8,7 @@ class ProfileController extends GetxController {
   var userName = ''.obs;
   var userImageUrl = ''.obs;
   var userEmail = ''.obs;
+  var userContact = ''.obs;
 
   @override
   void onInit() {
@@ -21,6 +22,11 @@ class ProfileController extends GetxController {
     userName.value = LocalStorage.myName;
     userImageUrl.value = LocalStorage.myImage;
     userEmail.value = LocalStorage.myEmail;
+    userContact.value = LocalStorage.myContact;
+    print("LocalStorage.myName is: ${LocalStorage.myName}");
+    print("LocalStorage.myImage is: ${LocalStorage.myImage}");
+    print("LocalStorage.myEmail is: ${LocalStorage.myEmail}");
+    print("LocalStorage.myContact is: ${LocalStorage.myContact}");
   }
 
   /// Handles the complete logout process.

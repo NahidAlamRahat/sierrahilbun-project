@@ -1,4 +1,3 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sierrahilbun/services/storage/storage_key.dart';
 
@@ -15,6 +14,8 @@ class LocalStorage {
   static String myName = "";
   static String myEmail = "";
   static String myRole = "";
+  static String myContact = "";
+  static String myLocation = "";
 
   // Create Local Storage Instance
   static SharedPreferences? preferences;
@@ -39,6 +40,8 @@ class LocalStorage {
     myName = localStorage.getString(LocalStorageKeys.myName) ?? "";
     myEmail = localStorage.getString(LocalStorageKeys.myEmail) ?? "";
     myRole = localStorage.getString(LocalStorageKeys.myRole) ?? "";
+    myContact = localStorage.getString(LocalStorageKeys.myContact) ?? "";
+    myLocation = localStorage.getString(LocalStorageKeys.myLocation) ?? "";
 
     appLog(userId, source: "Local Storage");
   }
@@ -47,7 +50,7 @@ class LocalStorage {
   static Future<void> removeAllPrefData() async {
     final localStorage = await _getStorage();
     await localStorage.clear();
-     _resetLocalStorageData();
+    _resetLocalStorageData();
     // Get.offAllNamed(AppRoutes.onboardingScreen);
     await getAllPrefData();
   }
@@ -65,12 +68,12 @@ class LocalStorage {
     localStorage.setString(LocalStorageKeys.myEmail, "");
     localStorage.setString(LocalStorageKeys.myRole, "");
     localStorage.setBool(LocalStorageKeys.isLogIn, false);
+    localStorage.setString(LocalStorageKeys.myContact, "");
+    localStorage.setString(LocalStorageKeys.myLocation, "");
   }
+
   // Save Data To SharedPreferences
-  static Future<void> setString(
-    String key,
-    String value,
-  ) async {
+  static Future<void> setString(String key, String value) async {
     final localStorage = await _getStorage();
     await localStorage.setString(key, value);
   }
@@ -85,4 +88,3 @@ class LocalStorage {
     await localStorage.setInt(key, value);
   }
 }
-

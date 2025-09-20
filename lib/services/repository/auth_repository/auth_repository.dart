@@ -1,6 +1,7 @@
 import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/model/api_response_model.dart';
 import 'package:sierrahilbun/model/otp_response_model.dart';
+import 'package:sierrahilbun/model/user_profile_response_model.dart';
 import 'package:sierrahilbun/model/verify_otp_screen_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/model/signin_response_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_up_screen/model/sign_up_response_model.dart';
@@ -231,4 +232,22 @@ class AuthRepository {
     }
   }
 
+
+  // --- NEW METHOD TO GET USER PROFILE ---
+  static Future<UserProfileResponseModel> getUserProfile() async {
+    try {
+      // This is a GET request. The interceptor will automatically add the
+      // Authorization header since the user has just logged in.
+      ApiResponseModel apiResponse = await ApiService.getApi(ApiUrls.userProfile);
+
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return UserProfileResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog("AuthRepository GetProfile Error: $e", source: "Auth Repository");
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
 }

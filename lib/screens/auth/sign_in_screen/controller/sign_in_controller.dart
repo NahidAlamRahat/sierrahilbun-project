@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/routes/app_routes.dart';
 import 'package:sierrahilbun/services/repository/auth_repository/auth_repository.dart';
 import 'package:sierrahilbun/services/storage/storage_key.dart';
 import 'package:sierrahilbun/services/storage/storage_service.dart';
+import 'package:sierrahilbun/utils/app_log/app_log.dart';
+import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
 class SignInController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -50,53 +53,78 @@ class SignInController extends GetxController {
 
   /// Handles the sign-in button tap event.
   Future<void> onTapSignInButton() async {
-    // First, validate the form.
     if (formKey.currentState!.validate()) {
-      // Set loading state to true.
+      FocusManager.instance.primaryFocus?.unfocus();
       isLoading.value = true;
 
       try {
-        // Call the repository to perform the login.
-        final response = await AuthRepository.login(
+        // --- STEP 1: Log in to get the tokens ---
+        final loginResponse = await AuthRepository.login(
           email: emailController.text.trim(),
           password: passwordController.text,
         );
 
-        // Save tokens using your existing LocalStorage service.
+        // Save tokens to LocalStorage immediately so the next API call is authenticated.
         await LocalStorage.setString(
           LocalStorageKeys.token,
-          response.data.accessToken,
+          loginResponse.data.accessToken,
         );
         await LocalStorage.setString(
           LocalStorageKeys.refreshToken,
-          response.data.refreshToken,
+          loginResponse.data.refreshToken,
         );
-        await LocalStorage.setBool(LocalStorageKeys.isLogIn, true);
+        // Also update the static variable for immediate use
+        LocalStorage.token = loginResponse.data.accessToken;
 
-        // Refresh the in-memory variables in LocalStorage.
-        await LocalStorage.getAllPrefData();
+        // --- STEP 2: Fetch the full user profile ---
+        final profileResponse = await AuthRepository.getUserProfile();
 
-        // Navigate to the home screen on success, removing the login screen from the stack.
-        Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+        if (profileResponse.success && profileResponse.data != null) {
+          final userData = profileResponse.data!;
+
+          // Construct the full image URL
+          final String fullImageUrl =
+              (userData.profileImage != null &&
+                  userData.profileImage!.isNotEmpty)
+              ? '${ApiUrls.baseImageUrl}${userData.profileImage}'
+              : '';
+
+          // --- STEP 3: Save all user data to LocalStorage ---
+          await LocalStorage.setString(LocalStorageKeys.userId, userData.id);
+          await LocalStorage.setString(
+            LocalStorageKeys.myName,
+            userData.name ?? '',
+          );
+          await LocalStorage.setString(
+            LocalStorageKeys.myEmail,
+            userData.email,
+          );
+          await LocalStorage.setString(LocalStorageKeys.myRole, userData.role);
+          await LocalStorage.setString(
+            LocalStorageKeys.myContact,
+            userData.contact ?? '',
+          );
+          await LocalStorage.setString(
+            LocalStorageKeys.myLocation,
+            userData.location ?? '',
+          );
+          await LocalStorage.setString(LocalStorageKeys.myImage, fullImageUrl);
+          await LocalStorage.setBool(LocalStorageKeys.isLogIn, true);
+
+          // Update static variables as well for immediate access
+          await LocalStorage.getAllPrefData();
+
+          appLog("All user data saved. Navigating to home.");
+          Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+        } else {
+          throw Exception("Failed to retrieve user profile after login.");
+        }
       } catch (e) {
-        // If an error occurs, show a GetX snackbar with the error message.
-        String errorMsg = e.toString().replaceFirst("Exception: ", "");
-        Get.snackbar(
-          'Login Error',
-          errorMsg,
-          backgroundColor: Colors.red.withOpacity(0.1),
-          colorText: Colors.red,
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 3),
-          margin: const EdgeInsets.all(16),
-          borderRadius: 8,
-          icon: const Icon(Icons.error_outline, color: Colors.red),
-        );
-        debugPrint("Login Error: ${e.toString()}");
-      } finally {
-        // Always set loading state back to false when the process is complete.
+        AppSnackBar.error(e.toString());
+        // On failure, ensure the loading indicator is turned off.
         isLoading.value = false;
       }
+      // On success, we navigate away, so no need to set isLoading to false.
     }
   }
 

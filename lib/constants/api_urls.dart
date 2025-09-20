@@ -33,4 +33,7 @@ class ApiUrls {
 
   // --- New Endpoint for User Profile ---
   static const String updateUserProfile = "user"; // The endpoint is just /user
+
+  // --- New Endpoint for fetching the user profile ---
+  static const String userProfile = "user/profile";
 }
