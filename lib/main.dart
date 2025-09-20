@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sierrahilbun/services/storage/storage_service.dart';
 
 import 'main_app_entry.dart';
 
@@ -15,7 +16,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Initialize GetStorage before running the app
-  // await LocalStorage.getAllPrefData();
+  await LocalStorage.getAllPrefData();
 
 
   // Run the main app

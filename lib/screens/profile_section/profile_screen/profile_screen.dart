@@ -8,7 +8,6 @@ import '../../../routes/app_routes.dart';
 import '../../../utils/app_size.dart';
 import '../../../widgets/app_button/app_button.dart';
 import '../../../widgets/app_image/app_image_circular.dart';
-import '../../../widgets/appbar_widget/appbar_widget.dart';
 import '../../../widgets/showCustomDialog.dart';
 import '../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
@@ -22,24 +21,14 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color(0xFFF2F9FF),
-      appBar:
-          // AppbarWidget(
-          //   leading:Icon(Icons.arrow_back_ios_new , color: Colors.black,),
-          //   showLeading: false,
-          //   textWidget: TextWidget(text: 'Profile',
-          //     fontSize: AppSize.width(value: 18),
-          //     fontWeight: FontWeight.w700,
-          //   ),
-          //
-          // ),
-          AppBar(
-            backgroundColor: Color(0xFFF2F9FF),
-            title: TextWidget(
-              text: 'Profile',
-              fontSize: AppSize.width(value: 18),
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFF2F9FF),
+        title: TextWidget(
+          text: 'Profile',
+          fontSize: AppSize.width(value: 18),
+          fontWeight: FontWeight.w700,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -267,6 +256,3 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-
-

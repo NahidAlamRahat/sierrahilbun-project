@@ -200,4 +200,35 @@ class AuthRepository {
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
+
+  // --- NEW CHANGE PASSWORD METHOD (for logged-in users) ---
+  static Future<OtpResponseModel> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    // 1. The body matches your Postman request.
+    final Map<String, dynamic> body = {
+      "currentPassword": currentPassword,
+      "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
+    };
+
+    try {
+      // 2. Call postApi. The interceptor in your ApiService will automatically
+      //    add the 'Authorization: Bearer <token>' header from LocalStorage.
+      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.changePassword, body);
+
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        // We can reuse OtpResponseModel for the success message.
+        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog("AuthRepository Change Password Error: $e", source: "Auth Repository");
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
+
 }

@@ -6,6 +6,7 @@ import 'package:sierrahilbun/screens/auth/forgot_password/controller/forgot_pass
 import 'package:sierrahilbun/screens/auth/forgot_verify_otp_screen/controller/forgot_pass_verify_otp_screen_controller.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/controller/sign_in_controller.dart';
 import 'package:sierrahilbun/screens/auth/sign_up_screen/controller/sign_up_controller.dart';
+import 'package:sierrahilbun/screens/profile_section/chnage_pass_screen/controller/change_password_controller.dart';
 
 import '../screens/home_screen/controller/home_controller.dart';
 
@@ -26,5 +27,7 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => ForgotPassVerifyOtpScreenController());
     //create new password
     Get.lazyPut(() => CreateNewPasswordController());
+    //change password
+    Get.lazyPut(() => ChangePasswordController());
   }
 }

@@ -26,4 +26,7 @@ class ApiUrls {
 
   // --- New Endpoint for Resetting the Password ---
   static const String resetPassword = "auth/reset-password";
+
+  // --- New Endpoint for Changing Password (Logged-In User) ---
+  static const String changePassword = "auth/change-password";
 }

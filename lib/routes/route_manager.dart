@@ -102,7 +102,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.changePassScreen,
         page: () => ChangePassScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(
