@@ -1,4 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!-- 1. The MODERN permission for Android 13 (API 33) and higher -->
+    <!-- This grants access to all images in the device's media store. -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- 2. The LEGACY permission for Android 12 (API 32) and lower -->
+    <!-- 'maxSdkVersion' ensures this is ONLY requested on older devices. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+
+    <!-- You might also have these from previous steps -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" /> 
     <application
         android:label="sierrahilbun"
         android:name="${applicationName}"

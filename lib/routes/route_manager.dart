@@ -96,7 +96,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.changeProfileScreen,
         page: () => ChangeProfileScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(

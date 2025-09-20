@@ -11,7 +11,8 @@ class ApiUrls {
   static const String baseUrl = "http://10.10.7.46:5001/api/v1/";
 
   // Image URL corrected as well
-  static const String imageUrl = "http://10.10.7.46:5001/api";
+
+  static const String baseImageUrl = "http://10.10.7.46:5001";
 
   // The endpoint should ONLY be the path, not the full URL
   static const String login = "auth/login";
@@ -29,4 +30,7 @@ class ApiUrls {
 
   // --- New Endpoint for Changing Password (Logged-In User) ---
   static const String changePassword = "auth/change-password";
+
+  // --- New Endpoint for User Profile ---
+  static const String updateUserProfile = "user"; // The endpoint is just /user
 }

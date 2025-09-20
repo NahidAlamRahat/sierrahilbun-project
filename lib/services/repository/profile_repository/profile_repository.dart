@@ -1,75 +1,59 @@
-/*
 import 'dart:io';
-import 'package:get/get_connect/http/src/multipart/form_data.dart';
-import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
-
-import '../../../constants/api_urls.dart';
-import '../../../models/profile_model.dart';
-import '../../../utils/app_log/error_log.dart';
-import '../../../widgets/app_snack_bar/app_snack_bar.dart';
-import '../../api/api_services.dart';
+import 'package:dio/dio.dart';
+import 'package:sierrahilbun/constants/api_urls.dart';
+import 'package:sierrahilbun/model/api_response_model.dart';
+import 'package:sierrahilbun/screens/profile_section/chnage_profile_info/model/update_profile_model.dart';
+import 'package:sierrahilbun/services/api/api_services.dart';
+import 'package:sierrahilbun/utils/app_log/app_log.dart';
 
 class ProfileRepository {
-  Future<Profile?> fetchProfile() async {
-    try {
-      var response = await ApiService.getApi(ApiUrls.profile);
-      if (response.body["data"] != null && response.body["data"] is Map) {
-        return Profile.fromJson(response.body["data"]);
-      }
-      return null;
-    } catch (e) {
-      errorLog(
-        e,
-        source: "fetchProfile repo function",
-      );
-      return null;
-    }
-  }
-
-  ///update Profile Repository
-
-  Future<bool> updateProfile({
-    String? name,
-    String? lastName,
-    List<double>? location,
-    File? imageFile,
+  static Future<UpdateProfileResponseModel> updateProfile({
+    required String name,
+    required String contact,
+    required String location,
+    String? imagePath, // The local path to the new image file
   }) async {
+    // 1. Create a FormData object to handle file uploads.
+    final formData = FormData.fromMap({
+      'name': name,
+      'contact': contact,
+      'location': location,
+    });
+
+    // 2. If a new image is selected, add it to the FormData.
+    if (imagePath != null && imagePath.isNotEmpty) {
+      final file = File(imagePath);
+      final fileName = file.path.split('/').last;
+      formData.files.add(
+        MapEntry(
+          'image', // This key must match the API's expected key for the file
+          await MultipartFile.fromFile(file.path, filename: fileName),
+        ),
+      );
+    }
+
     try {
-      final Map<String, dynamic> data = {};
-      if (name != null && name.trim().isNotEmpty) {
-        data["name"] = name;
-      }
-      if (lastName != null && lastName.trim().isNotEmpty) {
-        data["lastName"] = lastName;
-      }
-      if (location != null && location.isNotEmpty) {
-        data["location"] = {"type": "Point", "coordinates": location};
-      }
-      if (imageFile != null) {
-        data["image"] = await MultipartFile.fromFile(
-          imageFile.path,
-          filename: "profile.jpg",
-          contentType: MediaType("image", "jpg"),
-        );
-      }
-
-      FormData formData = FormData.fromMap(data);
-
-      errorLog(formData.fields, source: "FormData being sent");
-
-       await ApiService.patchApi(
-        ApiUrls.updateProfile,
+      // 3. We use the PATCH method for updating, which is common for partial updates.
+      //    We pass the FormData object as the body.
+      //    The Dio interceptor will automatically handle the Bearer token.
+      ApiResponseModel apiResponse = await ApiService.patchApi(
+        ApiUrls.updateUserProfile,
         body: formData,
       );
 
-      AppSnackBar.success("Profile updated successfully.");
-      return true;
-        } catch (e) {
-      errorLog(e, source: "updateProfile error");
-      AppSnackBar.error("An error occurred while updating the profile.");
-      return false;
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return UpdateProfileResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog(
+        "ProfileRepository Update Error: $e",
+        source: "Profile Repository",
+      );
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
-
 }
-*/

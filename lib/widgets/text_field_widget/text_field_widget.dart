@@ -19,6 +19,8 @@ class TextFieldWidget extends StatefulWidget {
 
   final Widget? prefixIcon; // Left icon
   final Widget? customSuffixIcon; // Right icon (custom, not password toggle)
+  //readOnly
+  final bool readOnly;
 
   const TextFieldWidget({
     super.key,
@@ -36,6 +38,7 @@ class TextFieldWidget extends StatefulWidget {
     this.borderWidth = 1,
     this.prefixIcon,
     this.customSuffixIcon,
+    this.readOnly = false,
   });
 
   @override
@@ -60,15 +63,14 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         borderRadius: BorderRadius.circular(widget.borderRadius),
       ),
       child: TextFormField(
+        readOnly: widget.readOnly,
         onFieldSubmitted: widget.onFieldSubmitted,
         controller: widget.controller,
         validator: widget.validator,
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        style: const TextStyle(
-          color: Color(0xFF1A1A1A),
-        ),
+        style: const TextStyle(color: Color(0xFF1A1A1A)),
         decoration: InputDecoration(
           fillColor: Colors.white,
           hintText: widget.hintText,
@@ -85,19 +87,19 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon ?? false
               ? GestureDetector(
-            onTap: () {
-              setState(() {
-                obscureText = !obscureText;
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(13),
-              child: Icon(
-                obscureText ? Icons.visibility_off : Icons.visibility,
-                color: Colors.grey.shade400,
-              ),
-            ),
-          )
+                  onTap: () {
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(13),
+                    child: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                )
               : widget.customSuffixIcon,
           contentPadding: EdgeInsets.all(ResponsiveUtils.width(18)),
           enabledBorder: OutlineInputBorder(

@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sierrahilbun/constants/app_colors.dart';
+import 'package:sierrahilbun/screens/profile_section/chnage_profile_info/controller/change_profile_screen_controller.dart';
+import 'package:sierrahilbun/services/storage/storage_service.dart';
 import '../../../utils/app_size.dart';
 import '../../../widgets/app_button/app_button.dart';
 import '../../../widgets/app_image/app_image_circular.dart';
@@ -9,120 +11,158 @@ import '../../../widgets/appbar_widget/appbar_widget.dart';
 import '../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
 
-
 class ChangeProfileScreen extends StatelessWidget {
+  ChangeProfileScreen({super.key});
 
-  TextEditingController controller = TextEditingController();
+  final ChangeProfileController controller = Get.put(ChangeProfileController());
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: AppColors.appBackgroundColor,
-      resizeToAvoidBottomInset: false,
-
+      resizeToAvoidBottomInset: true, // Allow resizing
       appBar: AppbarWidget(
         backgroundColor: AppColors.appBackgroundColor,
-       leading:  GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(Icons.arrow_back_ios_new,color: Colors.black,)),
-        showLeading: true,
-        textWidget: TextWidget(text: "Change Profile Information",
+        leading: GestureDetector(
+          onTap: () => Get.back(),
+          child: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+        ),
+        textWidget: const TextWidget(
+          text: "Change Profile Information",
           fontSize: 18,
           fontWeight: FontWeight.w700,
           textAlignment: TextAlign.center,
-      ),),
+        ),
+      ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                AppImageCircular(
-                  fit: BoxFit.cover,
-                  url:
-                      "https://cdn.pixabay.com/photo/2016/12/07/21/01/cartoon-1890438_640.jpg",
-                  width: AppSize.width(value: 148),
-                  height: AppSize.width(value: 148),
-                ),
-                Positioned(
-                  bottom: 2,
-                  right: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(
-                        AppSize.width(value: 24),
+        padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 16)),
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            children: [
+              SizedBox(height: AppSize.height(value: 20)),
+              GestureDetector(
+                onTap: controller.pickImageFromGallery, // Make avatar tappable
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    // Obx makes the avatar reactive to image selection
+                    Obx(() {
+                      return AppImageCircular(
+                        fit: BoxFit.cover,
+                        // If a new image is selected, show it from the file path.
+                        // Otherwise, show the existing image from the network URL.
+                        file: controller.selectedImagePath.value.isNotEmpty
+                            ? File(controller.selectedImagePath.value)
+                            : null,
+                        url: controller.selectedImagePath.value.isEmpty
+                            ? LocalStorage.myImage
+                            : null,
+                        width: AppSize.width(value: 148),
+                        height: AppSize.width(value: 148),
+                      );
+                    }),
+                    // Edit Icon
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: AppColors.commonButtonColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 20,
                       ),
                     ),
-        
-                  ),
+                  ],
                 ),
-              ],
-            ),
-        
-            Padding(
-              padding: EdgeInsets.all(AppSize.width(value: 16)),
-              child: Card(
+              ),
+              SizedBox(height: AppSize.height(value: 20)),
+              Card(
                 elevation: 3,
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: AppSize.size.height * 0.01,
-                  children: [
-                    TextWidget(text: 'Full Name',
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    TextFieldWidget(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const TextWidget(
+                        text: 'Full Name',
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: AppSize.height(value: 8)),
+                      TextFieldWidget(
                         borderRadius: 12,
-                        controller: controller, hintText: "Enter Name"),
-
-                    TextWidget(text: 'Phone Number',
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    TextFieldWidget(
+                        controller: controller.nameController,
+                        hintText: "Enter Name",
+                      ),
+                      SizedBox(height: AppSize.height(value: 16)),
+                      const TextWidget(
+                        text: 'Phone Number',
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: AppSize.height(value: 8)),
+                      TextFieldWidget(
                         borderRadius: 12,
-                        controller: controller, hintText: "Enter Number"),
-
-                    TextWidget(text: 'Email',
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    TextFieldWidget(
+                        controller: controller.phoneController,
+                        hintText: "Enter Number",
+                      ),
+                      SizedBox(height: AppSize.height(value: 16)),
+                      const TextWidget(
+                        text: 'Email',
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: AppSize.height(value: 8)),
+                      TextFieldWidget(
                         borderRadius: 12,
-                        controller: controller, hintText: "Enter Email"),
-
-                    TextWidget(text: 'Address',
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    TextFieldWidget(
+                        controller: controller.emailController,
+                        hintText: "Enter Email",
+                        readOnly: true,
+                      ), // Email is not editable
+                      SizedBox(height: AppSize.height(value: 16)),
+                      const TextWidget(
+                        text: 'Address',
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: AppSize.height(value: 8)),
+                      TextFieldWidget(
                         borderRadius: 12,
-                        controller: controller, hintText: "Enter Address"),
-
-
-                  ],
-                                ),
-                ),),
-            ),
-          ],
+                        controller: controller.addressController,
+                        hintText: "Enter Address",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSize.width(value: 16),
-            vertical: AppSize.width(value: 20),
-          ),
-          child: AppButton(
-            filColor: AppColors.commonButtonColor,
-            title: "Save",
-            titleSize: AppSize.width(value: 18),
-            borderRadius: BorderRadius.circular(AppSize.width(value: 24)),
-          ),
+          padding: EdgeInsets.all(AppSize.width(value: 16)),
+          child: Obx(() {
+            return controller.isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.commonButtonColor,
+                    ),
+                  )
+                : AppButton(
+                    onTap: controller.updateProfile,
+                    filColor: AppColors.commonButtonColor,
+                    title: "Save",
+                    titleSize: AppSize.width(value: 18),
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(value: 24),
+                    ),
+                  );
+          }),
         ),
       ),
     );
