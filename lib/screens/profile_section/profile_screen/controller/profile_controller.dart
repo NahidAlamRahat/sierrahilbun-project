@@ -5,6 +5,24 @@ import 'package:sierrahilbun/utils/app_log/app_log.dart';
 import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
 class ProfileController extends GetxController {
+  var userName = ''.obs;
+  var userImageUrl = ''.obs;
+  var userEmail = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Load the user's data when the controller is first created
+    loadUserData();
+  }
+
+  void loadUserData() {
+    // This will get the latest data, even if it was just updated.
+    userName.value = LocalStorage.myName;
+    userImageUrl.value = LocalStorage.myImage;
+    userEmail.value = LocalStorage.myEmail;
+  }
+
   /// Handles the complete logout process.
   Future<void> logout() async {
     try {

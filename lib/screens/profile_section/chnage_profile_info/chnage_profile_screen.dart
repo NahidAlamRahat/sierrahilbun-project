@@ -14,7 +14,8 @@ import '../../../widgets/text_widget/text_widgets.dart';
 class ChangeProfileScreen extends StatelessWidget {
   ChangeProfileScreen({super.key});
 
-  final ChangeProfileController controller = Get.put(ChangeProfileController());
+  final ChangeProfileController controller =
+      Get.find<ChangeProfileController>();
 
   @override
   Widget build(BuildContext context) {
