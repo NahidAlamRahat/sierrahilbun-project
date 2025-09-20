@@ -70,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
 
                       AppButton(
                         filColor: AppColors.commonButtonColor,
-                        title: "Edit Profaile",
+                        title: "Edit Profile",
                         width: AppSize.size.width * 0.3,
                         height: AppSize.size.width * 0.1,
                         onTap: () => Get.toNamed(AppRoutes.changeProfileScreen),
