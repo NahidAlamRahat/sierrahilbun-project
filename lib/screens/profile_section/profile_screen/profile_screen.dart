@@ -4,7 +4,6 @@ import 'package:sierrahilbun/constants/app_colors.dart';
 import 'package:sierrahilbun/constants/app_icons_path.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/controller/profile_controller.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/widget/ProfileRow.dart';
-import 'package:sierrahilbun/services/storage/storage_service.dart';
 import '../../../constants/app_image_path.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_size.dart';
@@ -14,7 +13,7 @@ import '../../../widgets/showCustomDialog.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   final ProfileController profileController = Get.find<ProfileController>();
 
@@ -39,28 +38,34 @@ class ProfileScreen extends StatelessWidget {
               padding: EdgeInsets.all(AppSize.width(value: 16)),
               child: Row(
                 children: [
-                  AppImageCircular(
-                    fit: BoxFit.cover,
-                    url: LocalStorage
-                        .myImage, // Use the user's profile image URL
-                    width: AppSize.width(value: 124),
-                    height: AppSize.width(value: 124),
+                  Obx(
+                    () => AppImageCircular(
+                      fit: BoxFit.cover,
+                      url: profileController
+                          .userImageUrl
+                          .value, // Use reactive observable
+                      width: AppSize.width(value: 124),
+                      height: AppSize.width(value: 124),
+                    ),
                   ),
                   // Gap(width: AppSize.width(value: 20)),
                   Column(
                     spacing: AppSize.size.height * 0.014,
                     children: [
-                      TextWidget(
-                        text: LocalStorage.myName,
-
-                        fontSize: AppSize.width(value: 18),
-                        fontWeight: FontWeight.w700,
+                      Obx(
+                        () => TextWidget(
+                          text: profileController.userName.value,
+                          fontSize: AppSize.width(value: 18),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      TextWidget(
-                        text: LocalStorage.myContact,
-                        fontSize: AppSize.width(value: 14),
-                        fontWeight: FontWeight.w500,
-                        // Use the text color from the current theme
+                      Obx(
+                        () => TextWidget(
+                          text: profileController.userContact.value,
+                          fontSize: AppSize.width(value: 14),
+                          fontWeight: FontWeight.w500,
+                          // Use the text color from the current theme
+                        ),
                       ),
 
                       AppButton(
