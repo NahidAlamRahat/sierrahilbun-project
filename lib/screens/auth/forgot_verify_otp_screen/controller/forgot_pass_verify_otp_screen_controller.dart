@@ -87,11 +87,11 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
         );
         AppSnackBar.success(response.message);
 
-        // Navigate to the create new password screen, passing email and OTP
-        // as proof of verification.
+        // Navigate to the create new password screen, passing the token
+        // received from the verification response.
         Get.toNamed(
           AppRoutes.createNewPasswordScreen,
-          arguments: {'email': email, 'otp': otpTextEditingController.text},
+          arguments: {'token': response.data ?? ''},
         );
       } catch (e) {
         AppSnackBar.error(e.toString());

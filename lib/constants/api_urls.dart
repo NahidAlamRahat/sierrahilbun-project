@@ -23,4 +23,7 @@ class ApiUrls {
   static const String resendOtp = "/auth/resend-otp";
   // --- New Endpoint for Forgot Password ---
   static const String forgotPassword = "auth/forgot-password";
+
+  // --- New Endpoint for Resetting the Password ---
+  static const String resetPassword = "auth/reset-password";
 }

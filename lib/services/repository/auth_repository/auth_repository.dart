@@ -1,6 +1,7 @@
 import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/model/api_response_model.dart';
 import 'package:sierrahilbun/model/otp_response_model.dart';
+import 'package:sierrahilbun/model/verify_otp_screen_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/model/signin_response_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_up_screen/model/sign_up_response_model.dart';
 import 'package:sierrahilbun/services/api/api_services.dart';
@@ -81,24 +82,22 @@ class AuthRepository {
     }
   }
 
-  // --- NEW VERIFY OTP METHOD ---
-  static Future<OtpResponseModel> verifyOtp({
+  // Now returns the new model to include the temporary data token.
+  static Future<VerifyOtpResponseModel> verifyOtp({
     required String email,
     required String otp,
   }) async {
-    // Construct the request body to match the Postman request.
     final Map<String, dynamic> body = {
       "email": email,
-      "oneTimeCode": int.tryParse(otp) ?? 0, // API expects an integer
+      "oneTimeCode": int.tryParse(otp) ?? 0,
     };
-
     try {
       ApiResponseModel apiResponse = await ApiService.postApi(
         ApiUrls.verifyOtp,
         body,
       );
       if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
-        return OtpResponseModel.fromJson(
+        return VerifyOtpResponseModel.fromJson(
           apiResponse.body as Map<String, dynamic>,
         );
       } else {
@@ -156,6 +155,46 @@ class AuthRepository {
     } catch (e) {
       appLog(
         "AuthRepository Forgot Password Error: $e",
+        source: "Auth Repository",
+      );
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
+
+  static Future<OtpResponseModel> resetPassword({
+    required String token, // This is the temporary token for the header
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    // 1. The body now ONLY contains the new passwords, as per your Postman details.
+    final Map<String, dynamic> body = {
+      "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
+    };
+
+    // 2. A custom header is created to send the temporary token.
+    //    The 'Bearer ' prefix has been removed to match your API's requirement.
+    final Map<String, String> headers = {'Authorization': token};
+
+    try {
+      // 3. The custom header is passed to the ApiService. This will override the
+      //    default (empty) token from LocalStorage for this specific request.
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.resetPassword,
+        body,
+        header: headers,
+      );
+
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return OtpResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog(
+        "AuthRepository Reset Password Error: $e",
         source: "Auth Repository",
       );
       throw Exception(e.toString().replaceFirst("Exception: ", ""));

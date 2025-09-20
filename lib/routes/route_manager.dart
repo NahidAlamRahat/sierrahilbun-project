@@ -61,7 +61,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.createNewPasswordScreen,
         page: () => CreateNewPasswordScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(

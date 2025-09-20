@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../utils/app_log/app_log.dart';
+import 'package:sierrahilbun/routes/app_routes.dart';
+import 'package:sierrahilbun/services/repository/auth_repository/auth_repository.dart';
+import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
-class CreatePasswordController extends GetxController {
-  final newPasswordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+class CreateNewPasswordController extends GetxController {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  // final UserResetPasswordRepository _userResetPasswordRepository =
-  //     Get.put(UserResetPasswordRepository());
+  var isLoading = false.obs;
 
-  late String token;
+  late String token; // This will hold the temporary token from the verify step
 
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null && Get.arguments is Map<String, dynamic>) {
-      token = Get.arguments['token'] ?? '';
-      appLog(token);
+    // Safely get arguments passed from the OTP verification screen
+    final args = Get.arguments;
+    if (args is Map<String, dynamic>) {
+      // The email is no longer needed here, but we must get the token.
+      token = args['token'] ?? '';
     } else {
       token = '';
+    }
+
+    // Critical check: If the token is missing, the user cannot proceed.
+    if (token.isEmpty) {
+      AppSnackBar.error(
+        "Verification token is missing. Please restart the process.",
+      );
+      // Get.offAllNamed(AppRoutes.signInScreen);
     }
   }
 
@@ -29,39 +42,50 @@ class CreatePasswordController extends GetxController {
     super.onClose();
   }
 
-
-/*  Future<void> onTapResetButton() async {
-    appLog(newPasswordController.text);
-    appLog(confirmPasswordController.text);
-    if (newPasswordController.text.isEmpty ||
-        confirmPasswordController.text.isEmpty) {
-      AppSnackBar.error("Please fill in all required fields.");
-      return;
+  // --- Validators for password fields (unchanged) ---
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter a new password.";
     }
-
-    var resetToken = {"Authorization": token};
-
-    ResetPasswordModel resetPasswordModel = ResetPasswordModel(
-        newPassword: newPasswordController.text,
-        confirmPassword: confirmPasswordController.text);
-
-    final bool isSuccess =
-        await _userResetPasswordRepository.resetPasswordApiCaller(
-            resetPasswordModel: resetPasswordModel, resetToken: resetToken);
-
-    if (isSuccess) {
-      AppSnackBar.success(
-          '${_userResetPasswordRepository.successfullyMessage}');
-
-      appLog(
-          'success message ===> ${_userResetPasswordRepository.successfullyMessage} <===');
-
-      Get.offAllNamed(AppRoutes.userSignInScreen);
-    } else {
-      AppSnackBar.message('${_userResetPasswordRepository.errorMessage}');
-      appLog('error message => ${_userResetPasswordRepository.errorMessage}');
+    if (value.length < 8) {
+      return "Password must be at least 8 characters.";
     }
-  }*/
+    return null;
+  }
 
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please confirm your password.";
+    }
+    if (value != newPasswordController.text) {
+      return "Passwords do not match.";
+    }
+    return null;
+  }
 
+  /// --- CORRECTED: On Tap button to save the new password using the token ---
+  Future<void> saveNewPassword() async {
+    if (formKey.currentState!.validate()) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      isLoading.value = true;
+
+      try {
+        // The call to the repository is now simpler and more accurate.
+        final response = await AuthRepository.resetPassword(
+          token: token, // Pass the temporary token for the header
+          newPassword: newPasswordController.text,
+          confirmPassword: confirmPasswordController.text,
+        );
+
+        AppSnackBar.success(response.message);
+        Get.offAllNamed(AppRoutes.signInScreen);
+      } catch (e) {
+        AppSnackBar.error(e.toString());
+      } finally {
+        if (!isClosed) {
+          isLoading.value = false;
+        }
+      }
+    }
+  }
 }
