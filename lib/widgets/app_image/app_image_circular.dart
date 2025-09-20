@@ -15,7 +15,7 @@ class AppImageCircular extends StatelessWidget {
     this.filePath,
     this.borderRadius = 100,
   });
-  
+
   final String? path;
   final String? filePath;
   final String? url;
