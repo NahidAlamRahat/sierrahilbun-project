@@ -72,14 +72,31 @@ class ChangeProfileController extends GetxController {
               ? '${ApiUrls.baseImageUrl}$relativePath'
               : '';
 
+          // Update all profile fields in SharedPreferences
           await LocalStorage.setString(
             LocalStorageKeys.myName,
             response.data!.name,
           );
           await LocalStorage.setString(LocalStorageKeys.myImage, fullImageUrl);
+          await LocalStorage.setString(
+            LocalStorageKeys.myContact,
+            response.data!.contact ?? '',
+          );
+          await LocalStorage.setString(
+            LocalStorageKeys.myEmail,
+            response.data!.email,
+          );
+          await LocalStorage.setString(
+            LocalStorageKeys.myLocation,
+            response.data!.location ?? '',
+          );
 
+          // Update static variables in memory for immediate access
           LocalStorage.myName = response.data!.name;
           LocalStorage.myImage = fullImageUrl;
+          LocalStorage.myContact = response.data!.contact ?? '';
+          LocalStorage.myEmail = response.data!.email;
+          LocalStorage.myLocation = response.data!.location ?? '';
         }
 
         // --- THE FIX IS HERE ---
