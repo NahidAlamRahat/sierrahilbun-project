@@ -56,4 +56,34 @@ class ProfileRepository {
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
+
+  static Future<UpdateProfileResponseModel> deleteAccount() async {
+    // 1. The body for this request simply sets the isDeleted flag to true.
+    final Map<String, dynamic> body = {"isDeleted": true};
+
+    try {
+      // 2. We use a PATCH request to the '/user' endpoint, which is the same
+      //    endpoint used for updating the profile. The interceptor in your
+      //    ApiService will automatically add the required Bearer token.
+      ApiResponseModel apiResponse = await ApiService.patchApi(
+        ApiUrls.updateUserProfile, // Reusing the /user endpoint
+        body: body,
+      );
+
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        // We can reuse the UpdateProfileResponseModel as the response structure is the same.
+        return UpdateProfileResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog(
+        "ProfileRepository Delete Account Error: $e",
+        source: "Profile Repository",
+      );
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
 }

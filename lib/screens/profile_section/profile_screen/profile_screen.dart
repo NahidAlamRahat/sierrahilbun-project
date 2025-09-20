@@ -4,6 +4,7 @@ import 'package:sierrahilbun/constants/app_colors.dart';
 import 'package:sierrahilbun/constants/app_icons_path.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/controller/profile_controller.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/widget/ProfileRow.dart';
+import 'package:sierrahilbun/widgets/text_field_widget/text_field_widget.dart';
 import '../../../constants/app_image_path.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_size.dart';
@@ -99,92 +100,98 @@ class ProfileScreen extends StatelessWidget {
                       text: "Password",
                     ),
 
+                    // ProfileRow(
+                    //   imagePath: AppIconsPath.deleteBoxIcon,
+                    //   text: "Delete Account",
+                    //   onTap: () {
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (context) {
+                    //         return ShowCustomDialog(
+                    //           title: 'Want to delete account !',
+                    //           description:
+                    //               'Please confirm your password to remove your account.',
+                    //           descriptionStyle: TextStyle(color: Colors.black),
+                    //           actionsLayout: ActionsLayout.column,
+                    //           image: Image.asset(
+                    //             AppImagePath.deleteBox,
+                    //             height: 24,
+                    //             width: 24,
+                    //           ),
+                    //           actions: [
+                    //             TextWidget(
+                    //               text: 'Password',
+                    //               fontWeight: FontWeight.w700,
+                    //               fontSize: 18,
+                    //               textAlignment: TextAlign.start,
+                    //             ),
+
+                    //             TextFieldWidget(
+                    //               borderRadius: 12,
+                    //               controller: controller,
+                    //               hintText: 'password',
+                    //             ),
+                    //             Row(
+                    //               children: [
+                    //                 Expanded(
+                    //                   child: GestureDetector(
+                    //                     onTap: () {
+                    //                       Get.back();
+                    //                     },
+                    //                     child: Container(
+                    //                       padding: EdgeInsets.symmetric(
+                    //                         horizontal: AppSize.width(
+                    //                           value: 18,
+                    //                         ),
+                    //                         vertical: AppSize.width(value: 14),
+                    //                       ),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius: BorderRadius.circular(
+                    //                           12,
+                    //                         ),
+                    //                         border: Border.all(
+                    //                           color: Colors.black,
+                    //                         ),
+                    //                       ),
+                    //                       child: Center(
+                    //                         child: TextWidget(
+                    //                           text: "Cancel",
+
+                    //                           fontSize: AppSize.width(
+                    //                             value: 16,
+                    //                           ),
+                    //                           fontWeight: FontWeight.w500,
+                    //                           fontColor: Colors.black,
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 SizedBox(width: 8),
+                    //                 Expanded(
+                    //                   child: GestureDetector(
+                    //                     onTap: () {
+                    //                       Get.toNamed(AppRoutes.signInScreen);
+                    //                     },
+                    //                     child: AppButton(
+                    //                       filColor: AppColors.commonButtonColor,
+                    //                       title: "Delete",
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     ProfileRow(
                       imagePath: AppIconsPath.deleteBoxIcon,
                       text: "Delete Account",
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ShowCustomDialog(
-                              title: 'Want to delete account !',
-                              description:
-                                  'Please confirm your password to remove your account.',
-                              descriptionStyle: TextStyle(color: Colors.black),
-                              actionsLayout: ActionsLayout.column,
-                              image: Image.asset(
-                                AppImagePath.deleteBox,
-                                height: 24,
-                                width: 24,
-                              ),
-                              actions: [
-                                TextWidget(
-                                  text: 'Password',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18,
-                                  textAlignment: TextAlign.start,
-                                ),
-
-                                // TextFieldWidget(
-                                //   borderRadius: 12,
-                                //   controller: controller,
-                                //   hintText: 'password',
-                                // ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.back();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: AppSize.width(
-                                              value: 18,
-                                            ),
-                                            vertical: AppSize.width(value: 14),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            border: Border.all(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: TextWidget(
-                                              text: "Cancel",
-
-                                              fontSize: AppSize.width(
-                                                value: 16,
-                                              ),
-                                              fontWeight: FontWeight.w500,
-                                              fontColor: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(AppRoutes.signInScreen);
-                                        },
-                                        child: AppButton(
-                                          filColor: AppColors.commonButtonColor,
-                                          title: "Delete",
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                      // The onTap now calls the controller method which handles the dialog.
+                      onTap: profileController.deleteAccount,
                     ),
 
                     ProfileRow(

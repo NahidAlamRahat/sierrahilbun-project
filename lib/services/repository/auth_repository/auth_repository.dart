@@ -6,6 +6,7 @@ import 'package:sierrahilbun/model/verify_otp_screen_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/model/signin_response_model.dart';
 import 'package:sierrahilbun/screens/auth/sign_up_screen/model/sign_up_response_model.dart';
 import 'package:sierrahilbun/services/api/api_services.dart';
+import 'package:sierrahilbun/services/storage/storage_service.dart';
 import 'package:sierrahilbun/utils/app_log/app_log.dart';
 
 class AuthRepository {
@@ -218,36 +219,81 @@ class AuthRepository {
     try {
       // 2. Call postApi. The interceptor in your ApiService will automatically
       //    add the 'Authorization: Bearer <token>' header from LocalStorage.
-      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.changePassword, body);
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.changePassword,
+        body,
+      );
 
       if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
         // We can reuse OtpResponseModel for the success message.
-        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+        return OtpResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
       } else {
         throw Exception(apiResponse.message);
       }
     } catch (e) {
-      appLog("AuthRepository Change Password Error: $e", source: "Auth Repository");
+      appLog(
+        "AuthRepository Change Password Error: $e",
+        source: "Auth Repository",
+      );
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
-
 
   // --- NEW METHOD TO GET USER PROFILE ---
   static Future<UserProfileResponseModel> getUserProfile() async {
     try {
       // This is a GET request. The interceptor will automatically add the
       // Authorization header since the user has just logged in.
-      ApiResponseModel apiResponse = await ApiService.getApi(ApiUrls.userProfile);
+      ApiResponseModel apiResponse = await ApiService.getApi(
+        ApiUrls.userProfile,
+      );
 
       if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
-        return UserProfileResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+        return UserProfileResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
       } else {
         throw Exception(apiResponse.message);
       }
     } catch (e) {
       appLog("AuthRepository GetProfile Error: $e", source: "Auth Repository");
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
+
+  // --- CORRECTED: Method to verify the user's current password using the login endpoint ---
+  static Future<bool> verifyPassword({required String password}) async {
+    // 1. Get the user's email from LocalStorage. The user must be logged in to do this.
+    final String email = LocalStorage.myEmail;
+    if (email.isEmpty) {
+      appLog(
+        "Cannot verify password, user email not found in LocalStorage.",
+        source: "Auth Repository",
+      );
+      return false;
+    }
+
+    // 2. Prepare the login request body.
+    final Map<String, dynamic> body = {"email": email, "password": password};
+
+    try {
+      // 3. Attempt to log in. We don't care about the response data, only if it succeeds.
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.login,
+        body,
+      );
+
+      // 4. If the status code is 200, the login was successful, meaning the password is correct.
+      return (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300);
+    } catch (e) {
+      appLog(
+        "AuthRepository Verify Password Error: $e",
+        source: "Auth Repository",
+      );
+      // 5. If an error occurs (like a 401 for wrong credentials), the password is incorrect.
+      return false;
     }
   }
 }
