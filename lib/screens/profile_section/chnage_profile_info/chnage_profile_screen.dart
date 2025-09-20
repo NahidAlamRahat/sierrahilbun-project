@@ -53,8 +53,8 @@ class ChangeProfileScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                         // If a new image is selected, show it from the file path.
                         // Otherwise, show the existing image from the network URL.
-                        file: controller.selectedImagePath.value.isNotEmpty
-                            ? File(controller.selectedImagePath.value)
+                        filePath: controller.selectedImagePath.value.isNotEmpty
+                            ? controller.selectedImagePath.value
                             : null,
                         url: controller.selectedImagePath.value.isEmpty
                             ? LocalStorage.myImage
