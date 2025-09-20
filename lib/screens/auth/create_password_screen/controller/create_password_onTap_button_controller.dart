@@ -33,10 +33,10 @@ class CreateNewPasswordController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void dispose() {
     newPasswordController.dispose();
     confirmPasswordController.dispose();
-    super.onClose();
+    super.dispose();
   }
 
   String? validatePassword(String? value) {

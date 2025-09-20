@@ -129,13 +129,13 @@ class SignUpController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void dispose() {
     // Dispose all text controllers to prevent memory leaks
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    super.onClose();
+    super.dispose();
   }
 }
