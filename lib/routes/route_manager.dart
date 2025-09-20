@@ -49,13 +49,13 @@ class RouteManager {
       GetPage(
         name: AppRoutes.forgotPasswordScreen,
         page: () => ForgotPasswordScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(
         name: AppRoutes.forgotPassVerifyOtpScreen,
         page: () => ForgotPassVerifyOtpScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(

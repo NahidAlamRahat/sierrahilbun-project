@@ -81,7 +81,7 @@ class AuthRepository {
     }
   }
 
-    // --- NEW VERIFY OTP METHOD ---
+  // --- NEW VERIFY OTP METHOD ---
   static Future<OtpResponseModel> verifyOtp({
     required String email,
     required String otp,
@@ -93,9 +93,14 @@ class AuthRepository {
     };
 
     try {
-      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.verifyOtp, body);
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.verifyOtp,
+        body,
+      );
       if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
-        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+        return OtpResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
       } else {
         throw Exception(apiResponse.message);
       }
@@ -106,16 +111,19 @@ class AuthRepository {
   }
 
   // --- NEW RESEND OTP METHOD ---
-  static Future<OtpResponseModel> resendOtp({
-    required String email,
-  }) async {
+  static Future<OtpResponseModel> resendOtp({required String email}) async {
     // The resend OTP endpoint typically only needs the user's email.
-    final Map<String, dynamic> body = { "email": email };
+    final Map<String, dynamic> body = {"email": email};
 
     try {
-      ApiResponseModel apiResponse = await ApiService.postApi(ApiUrls.resendOtp, body);
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.resendOtp,
+        body,
+      );
       if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
-        return OtpResponseModel.fromJson(apiResponse.body as Map<String, dynamic>);
+        return OtpResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
       } else {
         throw Exception(apiResponse.message);
       }
@@ -125,4 +133,32 @@ class AuthRepository {
     }
   }
 
+  // --- NEW FORGOT PASSWORD METHOD ---
+  static Future<OtpResponseModel> forgotPassword({
+    required String email,
+  }) async {
+    // This API only needs the user's email to send the OTP.
+    final Map<String, dynamic> body = {"email": email};
+
+    try {
+      ApiResponseModel apiResponse = await ApiService.postApi(
+        ApiUrls.forgotPassword,
+        body,
+      );
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        // We can reuse the OtpResponseModel since the success response is similar.
+        return OtpResponseModel.fromJson(
+          apiResponse.body as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog(
+        "AuthRepository Forgot Password Error: $e",
+        source: "Auth Repository",
+      );
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
+  }
 }

@@ -21,4 +21,6 @@ class ApiUrls {
   static const String verifyOtp = "/auth/verify-email";
   //resend OTP
   static const String resendOtp = "/auth/resend-otp";
+  // --- New Endpoint for Forgot Password ---
+  static const String forgotPassword = "auth/forgot-password";
 }
