@@ -6,32 +6,29 @@ import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
 class CreateNewPasswordController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  late TextEditingController newPasswordController;
+  late TextEditingController confirmPasswordController;
 
   var isLoading = false.obs;
 
-  late String token; // This will hold the temporary token from the verify step
+  late String token;
 
   @override
   void onInit() {
     super.onInit();
-    // Safely get arguments passed from the OTP verification screen
+    newPasswordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
     final args = Get.arguments;
     if (args is Map<String, dynamic>) {
-      // The email is no longer needed here, but we must get the token.
       token = args['token'] ?? '';
     } else {
       token = '';
     }
 
-    // Critical check: If the token is missing, the user cannot proceed.
     if (token.isEmpty) {
       AppSnackBar.error(
         "Verification token is missing. Please restart the process.",
       );
-      // Get.offAllNamed(AppRoutes.signInScreen);
     }
   }
 
@@ -42,7 +39,6 @@ class CreateNewPasswordController extends GetxController {
     super.onClose();
   }
 
-  // --- Validators for password fields (unchanged) ---
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return "Please enter a new password.";
@@ -63,16 +59,14 @@ class CreateNewPasswordController extends GetxController {
     return null;
   }
 
-  /// --- CORRECTED: On Tap button to save the new password using the token ---
   Future<void> saveNewPassword() async {
     if (formKey.currentState!.validate()) {
       FocusManager.instance.primaryFocus?.unfocus();
       isLoading.value = true;
 
       try {
-        // The call to the repository is now simpler and more accurate.
         final response = await AuthRepository.resetPassword(
-          token: token, // Pass the temporary token for the header
+          token: token,
           newPassword: newPasswordController.text,
           confirmPassword: confirmPasswordController.text,
         );

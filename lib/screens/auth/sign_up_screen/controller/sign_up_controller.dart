@@ -10,15 +10,25 @@ class SignUpController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // Text Field Controllers
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  late TextEditingController nameController ;
+  late TextEditingController emailController ;
+  late TextEditingController phoneController ;
+  late TextEditingController passwordController ;
+  late TextEditingController confirmPasswordController ;
 
   // --- State variables are now reactive (.obs) for better UI updates ---
   var isChecked = false.obs;
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+  }
 
   // Toggle checkbox
   void toggleCheckbox() {

@@ -48,7 +48,7 @@ class ForgotPassVerifyOtpScreen extends StatelessWidget {
             _buildPinCodeTextField(context),
             SizedBox(height: AppSize.height(value: 30)),
 
-            // --- UPDATED BUTTON ---
+            
             Obx(() {
               return controller.isLoading.value
                   ? const Center(
@@ -58,14 +58,14 @@ class ForgotPassVerifyOtpScreen extends StatelessWidget {
                     )
                   : ButtonWidget(
                       onPressed:
-                          controller.onTapVerifyButton, // Connect to controller
+                          controller.onTapVerifyButton, 
                       label: "Verify and Continue",
                       backgroundColor: AppColors.commonButtonColor,
                     );
             }),
             SizedBox(height: AppSize.height(value: 20)),
 
-            // --- UPDATED RESEND LOGIC ---
+            
             Obx(() {
               return controller.canResend.value
                   ? Row(
@@ -80,7 +80,7 @@ class ForgotPassVerifyOtpScreen extends StatelessWidget {
                         const SpaceWidget(spaceWidth: 6),
                         TextButtonWidget(
                           onPressed:
-                              controller.resendCode, // Connect to controller
+                              controller.resendCode, 
                           text: 'Resend',
                           textColor: AppColors.commonButtonColor,
                           fontSize: 14,

@@ -25,7 +25,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
             children: [
               SizedBox(
                 height: AppSize.height(value: 60),
-              ), // Add padding from top
+              ), 
               Image.asset(AppImagePath.resetPasswordImage),
               SizedBox(height: 20),
               const TextWidget(
@@ -44,7 +44,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
               buildForm(),
               SizedBox(height: AppSize.height(value: 40)),
 
-              // --- UPDATED BUTTON WITH LOADING STATE ---
+              
               Obx(() {
                 return controller.isLoading.value
                     ? const Center(
@@ -65,7 +65,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
     );
   }
 
-  /// Text Field
+  
   Widget buildForm() {
     return Column(
       children: [
@@ -76,7 +76,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
           keyboardType: TextInputType.visiblePassword,
           maxLines: 1,
           suffixIcon: true,
-          validator: controller.validatePassword, // Added validator
+          validator: controller.validatePassword, 
         ),
         SizedBox(height: AppSize.height(value: 20)),
         TextFieldWidget(
@@ -86,7 +86,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
           hintText: 'Confirm Password',
           maxLines: 1,
           suffixIcon: true,
-          validator: controller.validateConfirmPassword, // Added validator
+          validator: controller.validateConfirmPassword, 
         ),
       ],
     );

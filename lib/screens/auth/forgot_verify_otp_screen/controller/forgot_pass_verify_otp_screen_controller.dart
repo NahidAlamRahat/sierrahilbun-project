@@ -7,8 +7,7 @@ import '../../../../widgets/app_snack_bar/app_snack_bar.dart';
 
 class ForgotPassVerifyOtpScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController otpTextEditingController =
-      TextEditingController();
+  late TextEditingController otpTextEditingController;
 
   var remainingSeconds = 180.obs;
   var canResend = false.obs;
@@ -20,6 +19,7 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    otpTextEditingController = TextEditingController();
     final args = Get.arguments;
     if (args is Map<String, dynamic> && args.containsKey('email')) {
       email = args['email'];
@@ -57,14 +57,13 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSec.toString().padLeft(2, '0')}';
   }
 
-  // Resending the code in this flow means calling the forgotPassword API again.
   void resendCode() async {
     if (email.isEmpty) return;
     isLoading.value = true;
     try {
       final response = await AuthRepository.forgotPassword(email: email);
       AppSnackBar.success(response.message);
-      startTimer(); // Restart the timer
+      startTimer();
     } catch (e) {
       AppSnackBar.error(e.toString());
     } finally {
@@ -74,7 +73,6 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     }
   }
 
-  // Verify the OTP and proceed to the next step
   Future<void> onTapVerifyButton() async {
     if (formKey.currentState!.validate()) {
       FocusManager.instance.primaryFocus?.unfocus();
@@ -87,8 +85,6 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
         );
         AppSnackBar.success(response.message);
 
-        // Navigate to the create new password screen, passing the token
-        // received from the verification response.
         Get.toNamed(
           AppRoutes.createNewPasswordScreen,
           arguments: {'token': response.data ?? ''},

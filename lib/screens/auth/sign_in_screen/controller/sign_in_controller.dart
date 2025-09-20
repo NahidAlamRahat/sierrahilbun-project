@@ -7,8 +7,8 @@ import 'package:sierrahilbun/services/storage/storage_service.dart';
 
 class SignInController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
 
   // --- UPDATED SECTION ---
   // Observable variables for UI state management.
@@ -18,15 +18,11 @@ class SignInController extends GetxController {
   // Removed errorMessage since we'll use GetX snackbar
   @override
   void onInit() {
-    initial();
-    super.onInit();
-
-  }
-
-  void initial() async {
-     emailController = TextEditingController();
+    emailController = TextEditingController();
     passwordController = TextEditingController();
+    super.onInit();
   }
+
   // -------------------------
 
   // Validate Email
@@ -105,10 +101,9 @@ class SignInController extends GetxController {
   }
 
   @override
-  void onClose() {
-    // Dispose controllers to prevent memory leaks when the screen is closed.
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    super.onClose();
+    super.dispose();
   }
 }

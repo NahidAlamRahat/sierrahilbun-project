@@ -6,9 +6,15 @@ import 'package:sierrahilbun/widgets/app_snack_bar/app_snack_bar.dart';
 
 class ForgotPasswordController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
+  late TextEditingController emailController;
 
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    emailController = TextEditingController();
+  }
 
   @override
   void onClose() {
