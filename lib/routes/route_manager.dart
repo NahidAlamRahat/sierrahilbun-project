@@ -90,7 +90,7 @@ class RouteManager {
       GetPage(
         name: AppRoutes.profileScreen,
         page: () => ProfileScreen(),
-        // binding: GeneralBindings(),
+        binding: AppBindings(),
       ),
 
       GetPage(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sierrahilbun/constants/app_colors.dart';
 import 'package:sierrahilbun/constants/app_icons_path.dart';
+import 'package:sierrahilbun/screens/profile_section/profile_screen/controller/profile_controller.dart';
 import 'package:sierrahilbun/screens/profile_section/profile_screen/widget/ProfileRow.dart';
 import '../../../constants/app_image_path.dart';
 import '../../../routes/app_routes.dart';
@@ -9,11 +10,12 @@ import '../../../utils/app_size.dart';
 import '../../../widgets/app_button/app_button.dart';
 import '../../../widgets/app_image/app_image_circular.dart';
 import '../../../widgets/showCustomDialog.dart';
-import '../../../widgets/text_field_widget/text_field_widget.dart';
 import '../../../widgets/text_widget/text_widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   TextEditingController controller = TextEditingController();
+
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
 
                       AppButton(
                         filColor: AppColors.commonButtonColor,
-                        title: "Edit Profile",
+                        title: "Edit Profaile",
                         width: AppSize.size.width * 0.3,
                         height: AppSize.size.width * 0.1,
                         onTap: () => Get.toNamed(AppRoutes.changeProfileScreen),
@@ -115,12 +117,12 @@ class ProfileScreen extends StatelessWidget {
                                   fontSize: 18,
                                   textAlignment: TextAlign.start,
                                 ),
-                                TextFieldWidget(
-                                  borderRadius: 12,
-                                  controller: controller,
-                                  hintText: 'password',
-                                ),
 
+                                // TextFieldWidget(
+                                //   borderRadius: 12,
+                                //   controller: controller,
+                                //   hintText: 'password',
+                                // ),
                                 Row(
                                   children: [
                                     Expanded(
@@ -229,7 +231,7 @@ class ProfileScreen extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          Get.toNamed(AppRoutes.signInScreen);
+                                          profileController.logout();
                                         },
                                         child: AppButton(
                                           filColor: AppColors.commonButtonColor,
