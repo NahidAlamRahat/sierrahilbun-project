@@ -36,4 +36,8 @@ class ApiUrls {
 
   // --- New Endpoint for fetching the user profile ---
   static const String userProfile = "user/profile";
+
+  // --- New Endpoints for document upload---
+  static const String getCategories = "category";
+  static const String uploadDocument = "document/upload";
 }
