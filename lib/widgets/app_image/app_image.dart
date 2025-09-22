@@ -150,6 +150,7 @@ class _NetworkImageWithRetryState extends State<NetworkImageWithRetry> {
     _setImage();
   }
 
+
   void _setImage() {
     try {
       final uri = Uri.tryParse(widget.imageUrl);
