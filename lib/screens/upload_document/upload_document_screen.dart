@@ -17,7 +17,8 @@ class UploadDocumentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarWidget(
-        showLeading: true, // Allow user to go back
+        centerTitle: true,
+        showLeading: false, // Allow user to go back
         text: 'Upload Document',
       ),
       body: Padding(

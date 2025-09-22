@@ -92,7 +92,12 @@ class UploadDocumentController extends GetxController {
           filePath: selectedFile.value!.path,
         );
         AppSnackBar.success(response.message);
-        Get.back(); // Go back on success
+        //Clear the form after successful submission
+        titleController.clear();
+        shortDescController.clear();
+        detailedDescController.clear();
+        selectedCategory.value = null;
+        selectedFile.value = null;
       } catch (e) {
         AppSnackBar.error(e.toString());
       } finally {
