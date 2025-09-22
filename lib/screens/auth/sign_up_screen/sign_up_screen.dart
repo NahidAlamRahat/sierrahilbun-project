@@ -141,13 +141,13 @@ class SignUpScreen extends StatelessWidget {
                   }),
 
                   const SpaceWidget(spaceHeight: 16),
-                  SocialLoginWidget(
-                    imagePath: AppImagePath.googleIcon,
-                    text: "Continue with Google",
-                    onTap: () {
-                      Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
-                    },
-                  ),
+                  // SocialLoginWidget(
+                  //   imagePath: AppImagePath.googleIcon,
+                  //   text: "Continue with Google",
+                  //   onTap: () {
+                  //     Get.offAllNamed(AppRoutes.swipeableBottomNavigation);
+                  //   },
+                  // ),
                   const SpaceWidget(spaceHeight: 20),
                   buildTermsCheckbox(),
                   const SpaceWidget(spaceHeight: 40),

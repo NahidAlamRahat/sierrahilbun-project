@@ -166,12 +166,12 @@ class SignInScreen extends StatelessWidget {
                       color: AppColors.grey300,
                     ),
                     const SpaceWidget(spaceWidth: 8),
-                    const TextWidget(
-                      text: AppStrings.orLogInWith,
-                      fontColor: AppColors.grey700,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    // const TextWidget(
+                    //   text: AppStrings.orLogInWith,
+                    //   fontColor: AppColors.grey700,
+                    //   fontSize: 10,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
                     const SpaceWidget(spaceWidth: 8),
                     Container(
                       height: AppSize.height(value: 1),
@@ -181,13 +181,13 @@ class SignInScreen extends StatelessWidget {
                   ],
                 ),
                 const SpaceWidget(spaceHeight: 16),
-                SocialLoginWidget(
-                  imagePath: AppImagePath.googleIcon,
-                  text: "Continue with Google",
-                  onTap: () {
-                    // TODO: Implement Google Sign In
-                  },
-                ),
+                // SocialLoginWidget(
+                //   imagePath: AppImagePath.googleIcon,
+                //   text: "Continue with Google",
+                //   onTap: () {
+                //     // TODO: Implement Google Sign In
+                //   },
+                // ),
               ],
             ),
           ),
