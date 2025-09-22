@@ -35,5 +35,6 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => ProfileController());
     //change profile info
     Get.lazyPut(() => ChangeProfileController());
+    
   }
 }

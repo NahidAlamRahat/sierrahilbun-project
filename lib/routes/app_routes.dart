@@ -19,5 +19,6 @@ class AppRoutes {
   static const uploadDocumentScreen = '/uploadDocumentScreen';
   static const swipeableBottomNavigation = '/swipeableBottomNavigation';
   static const myDocumentScreen = '/myDocumentScreen';
+  static const documentDetailScreen = '/documentDetailScreen';
 
 }

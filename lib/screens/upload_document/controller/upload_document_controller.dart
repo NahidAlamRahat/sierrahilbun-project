@@ -90,8 +90,10 @@ class UploadDocumentController extends GetxController {
           detailDescription: detailedDescController.text,
           categoryId: selectedCategory.value!.id,
           filePath: selectedFile.value!.path,
+          
         );
         AppSnackBar.success(response.message);
+        print("Upload Response: ${response}");
         //Clear the form after successful submission
         titleController.clear();
         shortDescController.clear();

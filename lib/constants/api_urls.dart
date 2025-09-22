@@ -40,4 +40,7 @@ class ApiUrls {
   // --- New Endpoints for document upload---
   static const String getCategories = "category";
   static const String uploadDocument = "document/upload";
+  // --- New Endpoint for fetching documents ---
+  static const String getDocuments =
+      "document/upload"; // As per your Postman info
 }

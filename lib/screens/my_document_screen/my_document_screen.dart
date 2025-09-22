@@ -1,26 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sierrahilbun/constants/app_colors.dart';
+import 'package:sierrahilbun/screens/my_document_screen/controller/my_document_controller.dart';
 import 'package:sierrahilbun/widgets/appbar_widget/appbar_widget.dart';
-
-import '../constants/app_colors.dart';
 
 class MyDocumentScreen extends StatelessWidget {
   const MyDocumentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the controller
+    final MyDocumentController controller = Get.put(MyDocumentController());
+
     return Scaffold(
-      appBar: AppbarWidget(
-        centerTitle: true,
-        text: 'My Document',
-      ),
-      body:  // Document Cards
-      Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
+      appBar: const AppbarWidget(centerTitle: true, text: 'My Documents'),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.commonButtonColor,
+            ),
+          );
+        }
+        if (controller.myDocuments.isEmpty) {
+          return const Center(
+            child: Text(
+              "You haven't uploaded any documents yet.",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          );
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: controller.myDocuments.length,
+          itemBuilder: (context, index) {
+            final doc = controller.myDocuments[index];
+            return GestureDetector(
+              onTap: () => controller.navigateToDetail(doc),
+              child: Container(
                 margin: const EdgeInsets.only(bottom: 15),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -39,9 +56,9 @@ class MyDocumentScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Example Title',
-                        style: TextStyle(
+                      Text(
+                        doc.title,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.black87,
@@ -49,11 +66,8 @@ class MyDocumentScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Soil Test',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        doc.category.title, // Display category title
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 12),
                       Container(
@@ -67,18 +81,20 @@ class MyDocumentScreen extends StatelessWidget {
                               flex: 2,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 12),
-                                child: const Row(
+                                  horizontal: 15,
+                                  vertical: 12,
+                                ),
+                                child: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.calendar_month,
                                       color: Colors.white,
                                       size: 18,
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
-                                      'Monday, 26 June',
-                                      style: TextStyle(
+                                      doc.formattedDate, // Display formatted date
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
@@ -97,9 +113,11 @@ class MyDocumentScreen extends StatelessWidget {
                               flex: 1,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 12),
+                                  horizontal: 15,
+                                  vertical: 12,
+                                ),
                                 child: const Text(
-                                  'Active',
+                                  'Active', // Placeholder status
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -115,11 +133,11 @@ class MyDocumentScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-      ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

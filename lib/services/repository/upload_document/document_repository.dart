@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:sierrahilbun/constants/api_urls.dart';
 import 'package:sierrahilbun/model/api_response_model.dart';
 import 'package:sierrahilbun/model/category_response_model.dart';
+import 'package:sierrahilbun/model/my_document_response_model.dart';
 import 'package:sierrahilbun/model/upload_document_response_model.dart';
 import 'package:sierrahilbun/services/api/api_services.dart';
 import 'package:sierrahilbun/utils/app_log/app_log.dart';
@@ -59,6 +60,22 @@ class DocumentRepository {
     } catch (e) {
       appLog("Upload Document Error: $e", source: "DocumentRepository");
       throw Exception("Failed to upload document.");
+    }
+  }
+
+   // --- NEW METHOD TO FETCH ALL DOCUMENTS ---
+  static Future<List<DocumentItem>> getMyDocuments() async {
+    try {
+      // Use a GET request to fetch the list. The interceptor will add the auth token.
+      ApiResponseModel apiResponse = await ApiService.getApi(ApiUrls.getDocuments);
+      if (apiResponse.statusCode >= 200 && apiResponse.statusCode < 300) {
+        return MyDocumentsResponseModel.fromJson(apiResponse.body as Map<String, dynamic>).data;
+      } else {
+        throw Exception(apiResponse.message);
+      }
+    } catch (e) {
+      appLog("Get My Documents Error: $e", source: "DocumentRepository");
+      throw Exception("Failed to load documents.");
     }
   }
 }

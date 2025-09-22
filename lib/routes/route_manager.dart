@@ -1,5 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:sierrahilbun/my_document_screen/my_document_screen.dart';
+import 'package:sierrahilbun/screens/my_document_screen/document_details_screen.dart';
+import 'package:sierrahilbun/screens/my_document_screen/my_document_screen.dart';
 import 'package:sierrahilbun/routes/bindings.dart';
 import 'package:sierrahilbun/screens/auth/sign_in_screen/sign_in_screen.dart';
 import 'package:sierrahilbun/screens/terms_condition_screen/terms_condition_screen.dart';
@@ -120,6 +121,11 @@ class RouteManager {
       GetPage(
         name: AppRoutes.myDocumentScreen,
         page: () => MyDocumentScreen(),
+        // binding: GeneralBindings(),
+      ),
+      GetPage(
+        name: AppRoutes.documentDetailScreen,
+        page: () => DocumentDetailScreen(),
         // binding: GeneralBindings(),
       ),
     ];
